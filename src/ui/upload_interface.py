@@ -7,6 +7,7 @@ import streamlit as st
 from typing import Optional, Dict, Any
 import time
 from src.services.file_handler import FileUploadHandler, FileMetadata
+from src.ui.styling import UIStyler
 
 class UploadInterface:
     """Streamlit interface for file upload and processing"""
@@ -28,12 +29,12 @@ class UploadInterface:
         Returns:
             Optional[Dict[str, Any]]: File data if successfully uploaded and validated
         """
-        st.header("📄 Document Upload")
+        st.header(f"{UIStyler.get_icon('upload')} Document Upload")
         
-        # Display supported formats
+        # Display supported formats with enhanced styling
         st.info(
-            "**Supported formats:** PDF, TXT, DOCX  \n"
-            "**Maximum file size:** 10MB"
+            f"**{UIStyler.get_icon('documents')} Supported formats:** PDF, TXT, DOCX  \n"
+            f"**{UIStyler.get_icon('metrics')} Maximum file size:** 10MB"
         )
         
         # File upload widget
@@ -62,24 +63,25 @@ class UploadInterface:
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            # Display file information
-            st.subheader("📋 File Information")
+            # Display file information with enhanced icons
+            st.subheader(f"{UIStyler.get_icon('info')} File Information")
             
             # Get file metadata
             metadata = self.file_handler.get_file_metadata(uploaded_file)
             
-            # Display file details
-            st.write(f"**Filename:** {metadata['filename']}")
-            st.write(f"**File Type:** {metadata['file_type']}")
-            st.write(f"**File Size:** {metadata['file_size_mb']} MB")
+            # Display file details with icons
+            file_icon = UIStyler.get_icon(metadata['file_type'].lstrip('.'))
+            st.write(f"**{UIStyler.get_icon('documents')} Filename:** {metadata['filename']}")
+            st.write(f"**{file_icon} File Type:** {metadata['file_type']}")
+            st.write(f"**{UIStyler.get_icon('metrics')} File Size:** {metadata['file_size_mb']} MB")
         
         with col2:
-            # Validation status
+            # Enhanced validation status
             if metadata['is_valid']:
-                st.success("✅ File Valid")
+                st.success(UIStyler.create_status_badge("success", "File Valid"))
             else:
-                st.error("❌ File Invalid")
-                st.error(metadata['error_message'])
+                st.error(UIStyler.create_status_badge("error", "File Invalid"))
+                st.error(f"{UIStyler.get_icon('error')} {metadata['error_message']}")
                 return None
         
         # Process file if valid
@@ -99,7 +101,7 @@ class UploadInterface:
         Returns:
             Optional[Dict[str, Any]]: Processed file data
         """
-        st.subheader("🔄 Processing File")
+        st.subheader(f"{UIStyler.get_icon('processing')} Processing File")
         
         # Create progress bar
         progress_bar = st.progress(0)
@@ -108,28 +110,28 @@ class UploadInterface:
         try:
             # Step 1: File validation (already done)
             progress_bar.progress(25)
-            status_text.text("✅ File validation complete")
+            status_text.text(f"{UIStyler.get_icon('success')} File validation complete")
             time.sleep(0.5)
             
             # Step 2: Text extraction
             progress_bar.progress(50)
-            status_text.text("📖 Extracting text content...")
+            status_text.text(f"{UIStyler.get_icon('processing')} Extracting text content...")
             
             extracted_text, error_message = self.file_handler.extract_text(uploaded_file)
             
             if error_message:
                 progress_bar.progress(0)
                 status_text.empty()
-                st.error(f"❌ Text extraction failed: {error_message}")
+                st.error(f"{UIStyler.get_icon('error')} Text extraction failed: {error_message}")
                 return None
             
             progress_bar.progress(75)
-            status_text.text("✅ Text extraction complete")
+            status_text.text(f"{UIStyler.get_icon('success')} Text extraction complete")
             time.sleep(0.5)
             
             # Step 3: Process document immediately with Gemini
             progress_bar.progress(80)
-            status_text.text("🤖 Processing with AI...")
+            status_text.text(f"{UIStyler.get_icon('loading')} Processing with AI...")
             
             from src.config import config
             api_key = config.get_gemini_api_key()

@@ -7,6 +7,7 @@ from typing import List, Optional, Dict, Any
 from src.storage.document_storage import DocumentStorage
 from src.models.document import Document, ProcessingJob
 from src.ui.qa_interface import render_qa_for_document
+from src.ui.styling import UIStyler
 
 
 class DocumentManager:
@@ -23,13 +24,13 @@ class DocumentManager:
     
     def render_document_management(self) -> None:
         """Render the main document management interface."""
-        st.subheader("📚 Document Management")
+        st.subheader(f"{UIStyler.get_icon('documents')} Document Management")
         
         # Get all documents
         documents = self.storage.list_documents()
         
         if not documents:
-            st.info("📄 No documents found. Upload some documents to get started!")
+            st.info(f"{UIStyler.get_icon('documents')} No documents found. Upload some documents to get started!")
             return
         
         # Document statistics
@@ -39,27 +40,27 @@ class DocumentManager:
         self._render_document_list(documents)
     
     def _render_document_stats(self, documents: List[Document]) -> None:
-        """Render document statistics."""
+        """Render document statistics with enhanced visual indicators."""
         # Calculate stats
         total_docs = len(documents)
         completed_docs = len([d for d in documents if d.processing_status == 'completed'])
         processing_docs = len([d for d in documents if d.processing_status in ['pending', 'processing']])
         failed_docs = len([d for d in documents if d.processing_status == 'failed'])
         
-        # Display stats
+        # Display enhanced stats with icons and colors
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
-            st.metric("📄 Total Documents", total_docs)
+            st.metric("Total Documents", f"{UIStyler.get_icon('documents')} {total_docs}")
         
         with col2:
-            st.metric("✅ Completed", completed_docs)
+            st.metric("Completed", f"{UIStyler.get_icon('completed')} {completed_docs}")
         
         with col3:
-            st.metric("⏳ Processing", processing_docs)
+            st.metric("Processing", f"{UIStyler.get_icon('processing')} {processing_docs}")
         
         with col4:
-            st.metric("❌ Failed", failed_docs)
+            st.metric("Failed", f"{UIStyler.get_icon('failed')} {failed_docs}")
         
         st.markdown("---")
     
@@ -125,43 +126,49 @@ class DocumentManager:
         return filtered_docs
     
     def _render_document_card(self, document: Document) -> None:
-        """Render a single document card with management options."""
-        # Status styling
-        status_colors = {
-            'completed': '🟢',
-            'processing': '🟡',
-            'pending': '🟡',
-            'failed': '🔴'
-        }
-        
-        status_icon = status_colors.get(document.processing_status, '⚪')
-        
-        # Document card
+        """Render a single document card with enhanced visual indicators."""
+        # Enhanced document card with modern styling
         with st.container():
-            # Header row
+            # Create enhanced document card HTML
+            file_icon = UIStyler.get_icon(document.file_type)
+            status_badge = UIStyler.create_status_badge(document.processing_status)
+            
+            # Format file size
+            file_size_mb = document.file_size / (1024 * 1024)
+            size_display = f"{file_size_mb:.1f} MB" if file_size_mb >= 1 else f"{document.file_size:,} bytes"
+            
+            # Meta information with icons
+            meta_items = [
+                f"{UIStyler.get_icon('documents')} {document.file_type.upper()}",
+                f"{UIStyler.get_icon('metrics')} {size_display}",
+                f"{UIStyler.get_icon('history')} {document.upload_timestamp.strftime('%Y-%m-%d %H:%M')}"
+            ]
+            meta_html = " • ".join(meta_items)
+            
+            # Header row with enhanced styling
             col1, col2, col3 = st.columns([3, 1, 1])
             
             with col1:
-                st.write(f"**{status_icon} {document.title}**")
-                st.caption(f"{document.file_type.upper()} • {document.file_size:,} bytes • Uploaded: {document.upload_timestamp.strftime('%Y-%m-%d %H:%M')}")
+                st.write(f"**{file_icon} {document.title}** {status_badge}")
+                st.caption(meta_html)
             
             with col2:
-                # Q&A button (only for completed documents)
+                # Enhanced Q&A button (only for completed documents)
                 if document.processing_status == 'completed':
-                    if st.button("💬 Q&A", key=f"qa_{document.id}", help="Ask questions about this document"):
+                    if st.button(f"{UIStyler.get_icon('qa')} Q&A", key=f"qa_{document.id}", help="Ask questions about this document"):
                         st.session_state.selected_doc_for_qa = document.id
                         st.rerun()
                 else:
-                    st.write(f"Status: {document.processing_status.title()}")
+                    st.write(f"**Status:** {document.processing_status.title()}")
             
             with col3:
-                # Delete button
-                if st.button("🗑️ Delete", key=f"delete_{document.id}", help="Delete this document"):
+                # Enhanced delete button
+                if st.button(f"{UIStyler.get_icon('delete')} Delete", key=f"delete_{document.id}", help="Delete this document"):
                     st.session_state.show_delete_confirmation[document.id] = True
                     st.rerun()
             
-            # Document details (expandable)
-            with st.expander("📋 Document Details", expanded=False):
+            # Document details (expandable) with enhanced icon
+            with st.expander(f"{UIStyler.get_icon('info')} Document Details", expanded=False):
                 self._render_document_details(document)
             
             # Delete confirmation dialog

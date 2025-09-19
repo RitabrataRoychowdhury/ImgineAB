@@ -9,6 +9,7 @@ from src.services.qa_engine import QAEngine, create_qa_engine
 from src.storage.document_storage import DocumentStorage
 from src.models.document import Document, QASession
 from src.config import config
+from src.ui.styling import UIStyler
 
 
 class QAInterface:
@@ -33,11 +34,11 @@ class QAInterface:
         Args:
             document_id: Optional document ID to start Q&A with
         """
-        # Get API key
+        # Get API key with enhanced error display
         api_key = config.get_gemini_api_key()
         if not api_key:
-            st.error("⚠️ Gemini API key not configured. Please set GEMINI_API_KEY in your environment.")
-            st.info("You can get an API key from: https://makersuite.google.com/app/apikey")
+            st.error(f"{UIStyler.get_icon('error')} Gemini API key not configured. Please set GEMINI_API_KEY in your environment.")
+            st.info(f"{UIStyler.get_icon('info')} You can get an API key from: https://makersuite.google.com/app/apikey")
             return
         
         # Initialize QA engine
@@ -55,20 +56,21 @@ class QAInterface:
         self._render_qa_session(selected_doc)
     
     def _render_document_selector(self, preselected_doc_id: Optional[str] = None) -> Optional[Document]:
-        """Render document selection interface."""
-        st.subheader("📄 Select Document")
+        """Render document selection interface with enhanced visual indicators."""
+        st.subheader(f"{UIStyler.get_icon('documents')} Select Document")
         
         # Get processed documents
         processed_docs = self.storage.list_documents(status_filter='completed')
         
         if not processed_docs:
-            st.warning("No processed documents available. Please upload and process documents first.")
+            st.warning(f"{UIStyler.get_icon('warning')} No processed documents available. Please upload and process documents first.")
             return None
         
-        # Create document options
+        # Create document options with enhanced icons
         doc_options = {}
         for doc in processed_docs:
-            display_name = f"{doc.title} ({doc.file_type.upper()}) - {doc.created_at.strftime('%Y-%m-%d %H:%M')}"
+            file_icon = UIStyler.get_icon(doc.file_type)
+            display_name = f"{file_icon} {doc.title} ({doc.file_type.upper()}) - {doc.created_at.strftime('%Y-%m-%d %H:%M')}"
             doc_options[display_name] = doc
         
         # Document selection
@@ -95,23 +97,24 @@ class QAInterface:
         
         selected_doc = doc_options[selected_name]
         
-        # Display document info
-        with st.expander("📋 Document Information", expanded=False):
+        # Display enhanced document info with icons
+        with st.expander(f"{UIStyler.get_icon('info')} Document Information", expanded=False):
             col1, col2 = st.columns(2)
             
             with col1:
-                st.write(f"**Title:** {selected_doc.title}")
-                st.write(f"**Type:** {selected_doc.document_type or 'Unknown'}")
-                st.write(f"**File Format:** {selected_doc.file_type.upper()}")
-                st.write(f"**Size:** {selected_doc.file_size:,} bytes")
+                st.write(f"**{UIStyler.get_icon('documents')} Title:** {selected_doc.title}")
+                st.write(f"**{UIStyler.get_icon('info')} Type:** {selected_doc.document_type or 'Unknown'}")
+                st.write(f"**{UIStyler.get_icon(selected_doc.file_type)} File Format:** {selected_doc.file_type.upper()}")
+                st.write(f"**{UIStyler.get_icon('metrics')} Size:** {selected_doc.file_size:,} bytes")
             
             with col2:
-                st.write(f"**Uploaded:** {selected_doc.upload_timestamp.strftime('%Y-%m-%d %H:%M')}")
-                st.write(f"**Processed:** {selected_doc.updated_at.strftime('%Y-%m-%d %H:%M')}")
-                st.write(f"**Status:** {selected_doc.processing_status}")
+                st.write(f"**{UIStyler.get_icon('upload')} Uploaded:** {selected_doc.upload_timestamp.strftime('%Y-%m-%d %H:%M')}")
+                st.write(f"**{UIStyler.get_icon('processing')} Processed:** {selected_doc.updated_at.strftime('%Y-%m-%d %H:%M')}")
+                status_badge = UIStyler.create_status_badge(selected_doc.processing_status)
+                st.write(f"**Status:** {status_badge}")
             
             if selected_doc.summary:
-                st.write("**Summary:**")
+                st.write(f"**{UIStyler.get_icon('info')} Summary:**")
                 st.write(selected_doc.summary)
         
         # Store selected document in session state
@@ -121,7 +124,7 @@ class QAInterface:
     
     def _render_qa_session(self, document: Document) -> None:
         """Render Q&A session interface for the selected document."""
-        st.subheader("💬 Ask Questions")
+        st.subheader(f"{UIStyler.get_icon('qa')} Ask Questions")
         
         # Get or create Q&A session
         session_id = self._get_or_create_session(document.id)
@@ -150,10 +153,10 @@ class QAInterface:
     def _render_chat_history(self, session: Optional[QASession]) -> None:
         """Render chat history for the session."""
         if not session or not session.questions:
-            st.info("💡 Start by asking a question about the document!")
+            st.info(f"{UIStyler.get_icon('info')} Start by asking a question about the document!")
             return
         
-        st.write("**Conversation History:**")
+        st.write(f"**{UIStyler.get_icon('history')} Conversation History:**")
         
         # Display questions and answers
         for i, interaction in enumerate(session.questions):
@@ -165,11 +168,11 @@ class QAInterface:
             with st.chat_message("assistant"):
                 st.write(interaction['answer'])
                 
-                # Show sources if available
+                # Show sources if available with enhanced icon
                 if interaction.get('sources'):
-                    with st.expander("📚 Sources", expanded=False):
+                    with st.expander(f"{UIStyler.get_icon('documents')} Sources", expanded=False):
                         for source in interaction['sources']:
-                            st.write(f"• {source}")
+                            st.write(f"{UIStyler.get_icon('info')} {source}")
                 
                 # Show timestamp
                 if interaction.get('timestamp'):

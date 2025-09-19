@@ -1,0 +1,441 @@
+2025-09-17 15:01:15,826 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 15:01:15,827 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 15:01:15,827 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 15:01:15,827 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 15:01:15,827 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 15:01:15,827 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 15:01:15,827 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 15:01:15,827 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 15:01:15,827 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 15:01:15,828 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 15:01:15,828 - src.app - INFO - _initialize_database:111 - Database size: 53248 bytes
+2025-09-17 15:01:15,848 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 15:01:15,848 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 0 documents
+2025-09-17 15:01:15,848 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 15:01:15,848 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 15:01:15,848 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 15:01:15,849 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 15:01:15,849 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 15:01:15,849 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 15:01:20,097 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 15:01:20,097 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 15:01:20,097 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 15:01:20,097 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 15:01:20,097 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 15:01:20,097 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 15:01:20,097 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 15:01:20,097 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 15:01:20,097 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 15:01:20,097 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 15:01:20,097 - src.app - INFO - _initialize_database:111 - Database size: 53248 bytes
+2025-09-17 15:01:20,108 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 15:01:20,108 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 0 documents
+2025-09-17 15:01:20,108 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 15:01:20,108 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 15:01:20,108 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 15:01:25,707 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 15:01:25,707 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 15:01:25,707 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 15:01:25,707 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 15:01:25,707 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 15:01:25,707 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 15:01:25,707 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 15:01:25,707 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 15:01:25,707 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 15:01:25,708 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 15:01:25,708 - src.app - INFO - _initialize_database:111 - Database size: 53248 bytes
+2025-09-17 15:01:25,721 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 15:01:25,721 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 0 documents
+2025-09-17 15:01:25,721 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 15:01:25,721 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 15:01:25,721 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 15:01:25,721 - __main__ - INFO - main:40 - Application initialized successfully in Streamlit
+2025-09-17 15:01:51,128 - src.services.simple_processor - INFO - process_document_immediately:41 - Starting immediate processing for Injured worker-PQME-(09.05.2025)-AA CL-09.09.2025.p5.pdf
+2025-09-17 15:01:51,128 - src.services.simple_processor - INFO - process_document_immediately:59 - Processing document with comprehensive AI analysis...
+2025-09-17 15:01:59,402 - src.services.simple_processor - INFO - process_document_immediately:66 - Comprehensive AI processing successful. Result keys: ['document_type', 'extracted_info', 'analysis', 'summary']
+2025-09-17 15:01:59,403 - src.services.simple_processor - INFO - process_document_immediately:84 - Document fully processed successfully
+2025-09-17 15:01:59,408 - src.storage.document_storage - INFO - create_document:48 - Created document record: 499b1197-12ab-4cd0-9275-ef70bb5bd7e8
+2025-09-17 15:01:59,408 - src.services.simple_processor - INFO - process_document_immediately:91 - Document 499b1197-12ab-4cd0-9275-ef70bb5bd7e8 stored with status: completed
+2025-09-17 15:02:25,558 - src.services.simple_processor - INFO - process_document_immediately:41 - Starting immediate processing for Injured worker-PQME-(09.05.2025)-AA CL-09.09.2025.p5.pdf
+2025-09-17 15:02:25,558 - src.services.simple_processor - INFO - process_document_immediately:59 - Processing document with comprehensive AI analysis...
+2025-09-17 15:02:33,657 - src.services.simple_processor - INFO - process_document_immediately:66 - Comprehensive AI processing successful. Result keys: ['document_type', 'extracted_info', 'analysis', 'summary']
+2025-09-17 15:02:33,658 - src.services.simple_processor - INFO - process_document_immediately:84 - Document fully processed successfully
+2025-09-17 15:02:33,662 - src.storage.document_storage - INFO - create_document:48 - Created document record: 31c3a53e-d401-4d5e-aa24-71e7f78d6704
+2025-09-17 15:02:33,663 - src.services.simple_processor - INFO - process_document_immediately:91 - Document 31c3a53e-d401-4d5e-aa24-71e7f78d6704 stored with status: completed
+2025-09-17 15:02:45,357 - src.storage.document_storage - INFO - create_qa_session:346 - Created Q&A session: cba2a7e1-f7c3-44f6-9e54-47616e6b858f
+2025-09-17 15:02:57,210 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session cba2a7e1-f7c3-44f6-9e54-47616e6b858f
+2025-09-17 15:04:23,231 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 15:04:23,230 - src.app - INFO - signal_handler:44 - Received signal 2, shutting down gracefully...
+2025-09-17 15:04:23,232 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 15:04:23,232 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 15:04:23,232 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 15:04:23,232 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 15:04:23,232 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 16:34:42,236 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 16:34:42,236 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 16:34:42,236 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 16:34:42,236 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 16:34:42,236 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 16:34:42,236 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 16:34:42,236 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 16:34:42,236 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 16:34:42,236 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 16:34:42,237 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 16:34:42,237 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 16:34:42,250 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 16:34:42,250 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 16:34:42,250 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 16:34:42,250 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 16:34:42,250 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 16:34:42,250 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 16:34:42,250 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 16:34:42,250 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 16:34:46,914 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 16:34:46,914 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 16:34:46,914 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 16:34:46,914 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 16:34:46,914 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 16:34:46,914 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 16:34:46,914 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 16:34:46,914 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 16:34:46,914 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 16:34:46,914 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 16:34:46,914 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 16:34:46,925 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 16:34:46,925 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 16:34:46,925 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 16:34:46,925 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 16:34:46,925 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 16:34:53,558 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 16:34:53,558 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 16:34:53,558 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 16:34:53,558 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 16:34:53,558 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 16:34:53,558 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 16:34:53,558 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 16:34:53,558 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 16:34:53,558 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 16:34:53,559 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 16:34:53,559 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 16:34:53,573 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 16:34:53,573 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 16:34:53,573 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 16:34:53,573 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 16:34:53,573 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 16:34:53,574 - __main__ - INFO - main:44 - Application initialized successfully in Streamlit
+2025-09-17 16:35:09,857 - src.app - INFO - signal_handler:44 - Received signal 2, shutting down gracefully...
+2025-09-17 16:35:09,859 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 16:35:09,859 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 16:35:09,859 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 16:40:39,918 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 16:40:39,918 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 16:40:39,918 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 16:40:39,918 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 16:40:39,918 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 16:40:39,918 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 16:40:39,918 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 16:40:39,918 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 16:40:39,918 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 16:40:39,919 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 16:40:39,919 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 16:40:39,932 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 16:40:39,932 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 16:40:39,932 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 16:40:39,932 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 16:40:39,932 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 16:40:39,932 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 16:40:39,932 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 16:40:39,932 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 16:40:45,273 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 16:40:45,273 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 16:40:45,273 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 16:40:45,273 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 16:40:45,273 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 16:40:45,273 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 16:40:45,273 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 16:40:45,273 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 16:40:45,273 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 16:40:45,273 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 16:40:45,273 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 16:40:45,284 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 16:40:45,284 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 16:40:45,284 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 16:40:45,284 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 16:40:45,284 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 16:40:55,936 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 16:40:55,936 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 16:40:55,936 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 16:40:55,936 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 16:40:55,936 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 16:40:55,936 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 16:40:55,936 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 16:40:55,936 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 16:40:55,937 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 16:40:55,937 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 16:40:55,938 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 16:40:55,951 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 16:40:55,951 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 16:40:55,951 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 16:40:55,951 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 16:40:55,951 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 16:40:55,951 - __main__ - INFO - main:44 - Application initialized successfully in Streamlit
+2025-09-17 16:41:19,578 - src.app - INFO - signal_handler:44 - Received signal 2, shutting down gracefully...
+2025-09-17 16:41:19,579 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 16:41:19,579 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 16:41:19,580 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 16:47:26,057 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 16:47:26,057 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 16:47:26,057 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 16:47:26,057 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 16:47:26,057 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 16:47:26,057 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 16:47:26,057 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 16:47:26,057 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 16:47:26,057 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 16:47:26,058 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 16:47:26,058 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 16:47:26,072 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 16:47:26,072 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 16:47:26,072 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 16:47:26,072 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 16:47:26,072 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 16:47:26,072 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 16:47:26,072 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 16:47:26,072 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 16:47:36,288 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 16:47:36,288 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 16:47:36,288 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 16:47:36,288 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 16:47:36,288 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 16:47:36,288 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 16:47:36,288 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 16:47:36,288 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 16:47:36,288 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 16:47:36,288 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 16:47:36,288 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 16:47:36,299 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 16:47:36,299 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 16:47:36,299 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 16:47:36,299 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 16:47:36,299 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 16:48:32,548 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 16:48:32,548 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 16:48:32,548 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 16:48:32,549 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 16:48:32,549 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 16:48:32,549 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 16:48:32,549 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 16:48:32,549 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 16:48:32,549 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 16:48:32,549 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 16:48:32,549 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 16:48:32,560 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 16:48:32,560 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 16:48:32,560 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 16:48:32,561 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 16:48:32,561 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 16:48:32,561 - __main__ - INFO - main:43 - Application initialized successfully in Streamlit
+2025-09-17 16:49:01,190 - src.storage.document_storage - INFO - create_qa_session:346 - Created Q&A session: b0b03c5d-e17b-4224-b2bc-4ac2c985dd2e
+2025-09-17 16:49:14,681 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session b0b03c5d-e17b-4224-b2bc-4ac2c985dd2e
+2025-09-17 16:50:10,572 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 16:50:10,571 - src.app - INFO - signal_handler:44 - Received signal 2, shutting down gracefully...
+2025-09-17 16:50:10,573 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 16:50:10,573 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 16:50:10,573 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 16:50:10,573 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 16:50:10,573 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 19:47:30,434 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 19:47:30,434 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 19:47:30,434 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 19:47:30,434 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 19:47:30,434 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 19:47:30,434 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 19:47:30,434 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 19:47:30,434 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 19:47:30,434 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 19:47:30,434 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 19:47:30,435 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 19:47:30,452 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 19:47:30,452 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 19:47:30,452 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 19:47:30,452 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 19:47:30,452 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 19:47:30,452 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 19:47:30,452 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 19:47:30,452 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 19:47:32,386 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 19:47:32,386 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 19:47:32,386 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 19:47:32,386 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 19:47:32,386 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 19:47:32,386 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 19:47:32,386 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 19:47:32,386 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 19:47:32,386 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 19:47:32,387 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 19:47:32,387 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 19:47:32,398 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 19:47:32,399 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 19:47:32,399 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 19:47:32,399 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 19:47:32,399 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 19:47:37,784 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 19:47:37,784 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 19:47:37,784 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 19:47:37,785 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 19:47:37,785 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 19:47:37,785 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 19:47:37,785 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 19:47:37,785 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 19:47:37,785 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 19:47:37,785 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 19:47:37,785 - src.app - INFO - _initialize_database:111 - Database size: 61440 bytes
+2025-09-17 19:47:37,804 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 19:47:37,804 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 2 documents
+2025-09-17 19:47:37,804 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 19:47:37,804 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 19:47:37,804 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 19:47:37,804 - __main__ - INFO - main:43 - Application initialized successfully in Streamlit
+2025-09-17 19:50:03,149 - src.services.simple_processor - INFO - process_document_immediately:41 - Starting immediate processing for Example Material Transfer Agreement.docx
+2025-09-17 19:50:03,149 - src.services.simple_processor - INFO - process_document_immediately:59 - Processing document with comprehensive AI analysis...
+2025-09-17 19:50:14,495 - src.services.simple_processor - INFO - process_document_immediately:66 - Comprehensive AI processing successful. Result keys: ['document_type', 'extracted_info', 'analysis', 'summary']
+2025-09-17 19:50:14,495 - src.services.simple_processor - INFO - process_document_immediately:84 - Document fully processed successfully
+2025-09-17 19:50:14,498 - src.storage.document_storage - INFO - create_document:48 - Created document record: f1f1f1cd-371b-4060-a470-c161c4e34369
+2025-09-17 19:50:14,498 - src.services.simple_processor - INFO - process_document_immediately:91 - Document f1f1f1cd-371b-4060-a470-c161c4e34369 stored with status: completed
+2025-09-17 19:50:42,009 - src.services.simple_processor - INFO - process_document_immediately:41 - Starting immediate processing for Example Material Transfer Agreement.docx
+2025-09-17 19:50:42,009 - src.services.simple_processor - INFO - process_document_immediately:59 - Processing document with comprehensive AI analysis...
+2025-09-17 19:50:56,387 - src.services.simple_processor - INFO - process_document_immediately:66 - Comprehensive AI processing successful. Result keys: ['document_type', 'extracted_info', 'analysis', 'summary']
+2025-09-17 19:50:56,387 - src.services.simple_processor - INFO - process_document_immediately:84 - Document fully processed successfully
+2025-09-17 19:50:56,388 - src.storage.document_storage - INFO - create_document:48 - Created document record: 37dcc48c-a31a-4897-bb5e-2146f6f278cd
+2025-09-17 19:50:56,388 - src.services.simple_processor - INFO - process_document_immediately:91 - Document 37dcc48c-a31a-4897-bb5e-2146f6f278cd stored with status: completed
+2025-09-17 19:51:08,770 - src.storage.document_storage - INFO - create_qa_session:346 - Created Q&A session: 843b28ed-9d82-4c63-9883-518d5986b0e7
+2025-09-17 19:51:45,224 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 843b28ed-9d82-4c63-9883-518d5986b0e7
+2025-09-17 19:52:10,824 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 843b28ed-9d82-4c63-9883-518d5986b0e7
+2025-09-17 19:52:37,405 - src.app - INFO - signal_handler:44 - Received signal 2, shutting down gracefully...
+2025-09-17 19:52:37,407 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 19:52:37,407 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 19:52:37,408 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 21:27:09,049 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 21:27:09,050 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 21:27:09,050 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 21:27:09,050 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 21:27:09,050 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 21:27:09,050 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 21:27:09,050 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 21:27:09,050 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 21:27:09,050 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 21:27:09,051 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 21:27:09,051 - src.app - INFO - _initialize_database:111 - Database size: 98304 bytes
+2025-09-17 21:27:09,063 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 21:27:09,064 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 4 documents
+2025-09-17 21:27:09,064 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 21:27:09,064 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 21:27:09,064 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 21:27:09,064 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 21:27:09,064 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 21:27:09,064 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 21:27:11,691 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 21:27:11,691 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 21:27:11,691 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 21:27:11,691 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 21:27:11,691 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 21:27:11,691 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 21:27:11,691 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 21:27:11,691 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 21:27:11,691 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 21:27:11,692 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 21:27:11,692 - src.app - INFO - _initialize_database:111 - Database size: 98304 bytes
+2025-09-17 21:27:11,703 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 21:27:11,703 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 4 documents
+2025-09-17 21:27:11,703 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 21:27:11,703 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 21:27:11,703 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 21:27:17,326 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 21:27:17,326 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 21:27:17,326 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 21:27:17,326 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 21:27:17,326 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 21:27:17,326 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 21:27:17,326 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 21:27:17,326 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 21:27:17,326 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 21:27:17,328 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 21:27:17,328 - src.app - INFO - _initialize_database:111 - Database size: 98304 bytes
+2025-09-17 21:27:17,339 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 21:27:17,339 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 4 documents
+2025-09-17 21:27:17,339 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 21:27:17,339 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 21:27:17,339 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 21:27:17,339 - __main__ - INFO - main:43 - Application initialized successfully in Streamlit
+2025-09-17 21:28:05,613 - src.app - INFO - signal_handler:44 - Received signal 2, shutting down gracefully...
+2025-09-17 21:28:05,613 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 21:28:05,613 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 21:28:05,614 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 21:42:59,587 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 21:42:59,587 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 21:42:59,587 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 21:42:59,587 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 21:42:59,587 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 21:42:59,587 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 21:42:59,587 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 21:42:59,587 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 21:42:59,587 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 21:42:59,588 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 21:42:59,588 - src.app - INFO - _initialize_database:111 - Database size: 98304 bytes
+2025-09-17 21:42:59,601 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 21:42:59,601 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 4 documents
+2025-09-17 21:42:59,601 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 21:42:59,601 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 21:42:59,601 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 21:42:59,601 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 21:42:59,601 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 21:42:59,601 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-17 21:43:01,590 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 21:43:01,590 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 21:43:01,590 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 21:43:01,590 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 21:43:01,590 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 21:43:01,590 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 21:43:01,590 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 21:43:01,590 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 21:43:01,590 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 21:43:01,591 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 21:43:01,591 - src.app - INFO - _initialize_database:111 - Database size: 98304 bytes
+2025-09-17 21:43:01,602 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 21:43:01,602 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 4 documents
+2025-09-17 21:43:01,602 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 21:43:01,602 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 21:43:01,602 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 21:43:06,815 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-17 21:43:06,815 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-17 21:43:06,815 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-17 21:43:06,815 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-17 21:43:06,815 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-17 21:43:06,815 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-17 21:43:06,815 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-17 21:43:06,815 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-17 21:43:06,815 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-17 21:43:06,815 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-17 21:43:06,815 - src.app - INFO - _initialize_database:111 - Database size: 98304 bytes
+2025-09-17 21:43:06,826 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-17 21:43:06,826 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 4 documents
+2025-09-17 21:43:06,826 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-17 21:43:06,826 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-17 21:43:06,826 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-17 21:43:06,826 - __main__ - INFO - main:43 - Application initialized successfully in Streamlit
+2025-09-17 21:43:24,679 - src.services.simple_processor - INFO - process_document_immediately:41 - Starting immediate processing for Example Material Transfer Agreement.docx
+2025-09-17 21:43:24,680 - src.services.simple_processor - INFO - process_document_immediately:59 - Processing document with comprehensive AI analysis...
+2025-09-17 21:43:37,792 - src.services.simple_processor - INFO - process_document_immediately:66 - Comprehensive AI processing successful. Result keys: ['document_type', 'extracted_info', 'analysis', 'summary']
+2025-09-17 21:43:37,792 - src.services.simple_processor - INFO - process_document_immediately:84 - Document fully processed successfully
+2025-09-17 21:43:37,798 - src.storage.document_storage - INFO - create_document:48 - Created document record: d9cdf04f-f2c9-40e1-aa70-a91cb303b355
+2025-09-17 21:43:37,798 - src.services.simple_processor - INFO - process_document_immediately:91 - Document d9cdf04f-f2c9-40e1-aa70-a91cb303b355 stored with status: completed
+2025-09-17 21:43:45,754 - src.storage.document_storage - INFO - create_qa_session:346 - Created Q&A session: 5a0a0f14-9368-4d2e-aa4c-d8ce32b57f77
+2025-09-17 21:45:11,126 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 5a0a0f14-9368-4d2e-aa4c-d8ce32b57f77
+2025-09-17 21:46:06,445 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 5a0a0f14-9368-4d2e-aa4c-d8ce32b57f77
+2025-09-17 21:47:18,924 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 5a0a0f14-9368-4d2e-aa4c-d8ce32b57f77
+2025-09-17 21:48:24,401 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 5a0a0f14-9368-4d2e-aa4c-d8ce32b57f77
+2025-09-17 21:51:39,212 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 5a0a0f14-9368-4d2e-aa4c-d8ce32b57f77
+2025-09-17 22:00:38,475 - src.app - INFO - signal_handler:44 - Received signal 2, shutting down gracefully...
+2025-09-17 22:00:38,477 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-17 22:00:38,477 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-17 22:00:38,477 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete

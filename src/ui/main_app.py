@@ -14,6 +14,7 @@ from src.app import get_app, initialize_app
 from src.ui.upload_interface import UploadInterface
 from src.ui.qa_interface import render_qa_page
 from src.ui.document_manager import render_document_management_page
+from src.ui.styling import UIStyler
 from src.utils.logging_config import get_logger
 from src.utils.error_handling import DocumentQAError, format_error_for_ui
 
@@ -29,6 +30,8 @@ def main():
         layout="wide",
         initial_sidebar_state="expanded"
     )
+    
+    # No CSS injection - just use simple icons
     
     # Initialize application if not already done
     if 'app_initialized' not in st.session_state:
@@ -66,21 +69,30 @@ def main():
         logger.error(f"Streamlit app error: {e}", exc_info=True)
         st.stop()
     
-    # Main title
-    st.title("📚 Document Q&A System")
-    st.markdown("Upload and process documents for intelligent question answering")
+    # Simple title with icon
+    st.title(f"{UIStyler.get_icon('documents')} Document Q&A System")
+    st.write("Upload and process documents for intelligent question answering")
     
     # System status indicator
     with st.sidebar:
+        st.subheader(f"{UIStyler.get_icon('status')} System Status")
         status = st.session_state.get('system_status', {})
         if status:
-            st.success("🟢 System Online")
-            with st.expander("System Info", expanded=False):
-                st.write(f"Documents: {status.get('storage', {}).get('total_documents', 0)}")
-                st.write(f"Queue: {status.get('workflow', {}).get('queue_size', 0)} jobs")
-                st.write(f"API: {'✅' if status.get('config', {}).get('api_key_configured') else '❌'}")
+            st.success(UIStyler.create_status_badge("online", "System Online"))
+            with st.expander(f"{UIStyler.get_icon('info')} System Info", expanded=False):
+                # System metrics
+                storage_info = status.get('storage', {})
+                workflow_info = status.get('workflow', {})
+                config_info = status.get('config', {})
+                
+                st.write(f"**{UIStyler.get_icon('metrics')} Quick Stats:**")
+                st.write(f"- {UIStyler.get_icon('documents')} Documents: {storage_info.get('total_documents', 0)}")
+                st.write(f"- {UIStyler.get_icon('queue')} Queue: {workflow_info.get('queue_size', 0)} jobs")
+                api_status = 'Configured' if config_info.get('api_key_configured') else 'Not configured'
+                api_icon = UIStyler.get_icon('success') if config_info.get('api_key_configured') else UIStyler.get_icon('error')
+                st.write(f"- {UIStyler.get_icon('api')} API: {api_icon} {api_status}")
         else:
-            st.warning("🟡 System Status Unknown")
+            st.warning(UIStyler.create_status_badge("warning", "Status Unknown"))
     
     # Initialize upload interface
     try:
@@ -91,13 +103,29 @@ def main():
         logger.error(f"Upload interface error: {e}", exc_info=True)
         upload_interface = None
     
-    # Sidebar navigation
+    # Simple sidebar navigation with icons
     with st.sidebar:
-        st.header("Navigation")
-        page = st.selectbox(
+        st.markdown("---")
+        st.subheader(f"{UIStyler.get_icon('home')} Navigation")
+        
+        # Navigation options with icons
+        nav_options = [
+            f"{UIStyler.get_icon('upload')} Upload Documents",
+            f"{UIStyler.get_icon('documents')} Document Management", 
+            f"{UIStyler.get_icon('qa')} Q&A Interface",
+            f"{UIStyler.get_icon('history')} Upload History",
+            f"{UIStyler.get_icon('status')} System Status",
+            f"{UIStyler.get_icon('about')} About"
+        ]
+        
+        selected_display = st.selectbox(
             "Choose a section:",
-            ["Upload Documents", "Document Management", "Q&A Interface", "Upload History", "System Status", "About"]
+            nav_options,
+            help="Select a section to navigate to"
         )
+        
+        # Extract page name
+        page = selected_display.split(' ', 1)[1]  # Remove icon and get page name
     
     # Handle navigation switches from upload interface
     if st.session_state.get('switch_to_qa', False):
@@ -163,7 +191,10 @@ def render_upload_page(upload_interface: UploadInterface):
     
     st.markdown("---")
     
-    # Upload section
+    # Upload section with modern styling
+    st.markdown("### 📤 Upload Documents")
+    st.markdown("Select files to upload and process for intelligent Q&A")
+    
     file_data = upload_interface.render_upload_section()
     
     if file_data:
@@ -171,15 +202,15 @@ def render_upload_page(upload_interface: UploadInterface):
         
         # Check if document has been processed
         if file_data.get('processing_complete'):
-            st.success("🎉 Document uploaded and AI processing complete!")
+            st.success("🎉 Document Processing Complete!")
             
             # Show immediate Q&A access
-            st.info(
-                "**Your document is ready:**\n"
-                "✅ Text extracted and analyzed\n"
-                "🤖 AI processing complete\n"
-                "💬 Ready for intelligent Q&A!"
-            )
+            st.info("""
+            **Your document is ready:**
+            - ✅ Text extracted and analyzed
+            - 🤖 AI processing complete  
+            - 💬 Ready for intelligent Q&A!
+            """)
             
             # Quick access buttons
             col1, col2 = st.columns(2)
@@ -207,6 +238,8 @@ def render_history_page(upload_interface: UploadInterface):
     """Render the upload history page"""
     
     st.markdown("---")
+    st.markdown("### 📋 Upload History")
+    st.markdown("View and manage your document upload history")
     
     uploaded_files = upload_interface.get_uploaded_files()
     
@@ -228,10 +261,11 @@ def render_history_page(upload_interface: UploadInterface):
             st.rerun()
 
 def render_system_status_page():
-    """Render the system status page"""
+    """Render the system status page with enhanced visual indicators"""
     
     st.markdown("---")
-    st.header("🔧 System Status")
+    st.markdown(f"### {UIStyler.get_icon('status')} System Status")
+    st.markdown("Monitor system health and performance metrics")
     
     try:
         app = get_app()
@@ -241,80 +275,89 @@ def render_system_status_page():
             st.error(f"System status error: {status['error']}")
             return
         
-        # Overall status
+        # System status metrics
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            st.metric("System Status", "🟢 Online" if status['initialized'] else "🔴 Offline")
+            system_status = "Online" if status['initialized'] else "Offline"
+            icon = UIStyler.get_icon('online') if status['initialized'] else UIStyler.get_icon('offline')
+            st.metric("System Status", f"{icon} {system_status}")
         
         with col2:
-            st.metric("Total Documents", status['storage']['total_documents'])
+            st.metric("Total Documents", f"{UIStyler.get_icon('documents')} {status['storage']['total_documents']}")
         
         with col3:
-            st.metric("Queue Size", status['workflow']['queue_size'])
+            queue_size = status['workflow']['queue_size']
+            st.metric("Queue Size", f"{UIStyler.get_icon('queue')} {queue_size}")
         
-        # Detailed information
-        st.subheader("📊 Storage Statistics")
+        # Storage statistics with icons
+        st.subheader(f"{UIStyler.get_icon('metrics')} Storage Statistics")
         storage_stats = status['storage']
         
         col1, col2 = st.columns(2)
         
         with col1:
-            st.write("**Documents by Status:**")
+            st.write(f"**{UIStyler.get_icon('documents')} Documents by Status:**")
             for status_name, count in storage_stats['documents_by_status'].items():
-                st.write(f"- {status_name}: {count}")
+                status_icon = UIStyler.get_icon(status_name)
+                st.write(f"{status_icon} {status_name}: {count}")
         
         with col2:
-            st.write("**Processing Jobs by Status:**")
+            st.write(f"**{UIStyler.get_icon('queue')} Processing Jobs by Status:**")
             for status_name, count in storage_stats['jobs_by_status'].items():
-                st.write(f"- {status_name}: {count}")
+                status_icon = UIStyler.get_icon(status_name)
+                st.write(f"{status_icon} {status_name}: {count}")
         
         # Database information
-        st.subheader("🗄️ Database Information")
+        st.subheader(f"{UIStyler.get_icon('database')} Database Information")
         db_info = status['database']
         
         col1, col2 = st.columns(2)
         
         with col1:
-            st.write(f"**Path:** `{db_info['path']}`")
-            st.write(f"**Size:** {db_info['size_bytes']:,} bytes")
+            st.write(f"**{UIStyler.get_icon('info')} Path:** `{db_info['path']}`")
+            st.write(f"**{UIStyler.get_icon('metrics')} Size:** {db_info['size_bytes']:,} bytes")
         
         with col2:
-            st.write("**Tables:**")
+            st.write(f"**{UIStyler.get_icon('database')} Tables:**")
             for table, count in db_info['tables'].items():
-                st.write(f"- {table}: {count} records")
+                st.write(f"{UIStyler.get_icon('documents')} {table}: {count} records")
         
         # Configuration
-        st.subheader("⚙️ Configuration")
+        st.subheader(f"{UIStyler.get_icon('settings')} Configuration")
         config_info = status['config']
         
         col1, col2 = st.columns(2)
         
         with col1:
-            st.write(f"**Max File Size:** {config_info['max_file_size_mb']} MB")
-            st.write(f"**Debug Mode:** {'✅' if config_info['debug_mode'] else '❌'}")
+            st.write(f"**{UIStyler.get_icon('metrics')} Max File Size:** {config_info['max_file_size_mb']} MB")
+            debug_icon = UIStyler.get_icon('success') if config_info['debug_mode'] else UIStyler.get_icon('error')
+            st.write(f"**{UIStyler.get_icon('settings')} Debug Mode:** {debug_icon} {'Enabled' if config_info['debug_mode'] else 'Disabled'}")
         
         with col2:
-            st.write(f"**API Configured:** {'✅' if config_info['api_key_configured'] else '❌'}")
-            st.write(f"**Allowed Types:** {', '.join(config_info['allowed_file_types'])}")
+            api_icon = UIStyler.get_icon('success') if config_info['api_key_configured'] else UIStyler.get_icon('error')
+            st.write(f"**{UIStyler.get_icon('api')} API Configured:** {api_icon} {'Yes' if config_info['api_key_configured'] else 'No'}")
+            st.write(f"**{UIStyler.get_icon('documents')} Allowed Types:** {', '.join(config_info['allowed_file_types'])}")
         
         # Workflow status
-        st.subheader("🔄 Workflow Status")
+        st.subheader(f"{UIStyler.get_icon('processing')} Workflow Status")
         workflow_info = status['workflow']
         
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            st.metric("Queue Size", workflow_info['queue_size'])
+            st.metric("Queue Size", f"{UIStyler.get_icon('queue')} {workflow_info['queue_size']}")
         
         with col2:
-            st.metric("Active Jobs", workflow_info['active_jobs'])
+            st.metric("Active Jobs", f"{UIStyler.get_icon('processing')} {workflow_info['active_jobs']}")
         
         with col3:
-            st.metric("Manager Running", "✅" if workflow_info['running'] else "❌")
+            manager_text = "Running" if workflow_info['running'] else "Stopped"
+            manager_icon = UIStyler.get_icon('online') if workflow_info['running'] else UIStyler.get_icon('offline')
+            st.metric("Manager Status", f"{manager_icon} {manager_text}")
         
         # Refresh button
-        if st.button("🔄 Refresh Status"):
+        if st.button(f"{UIStyler.get_icon('refresh')} Refresh Status"):
             st.session_state.pop('system_status_checked', None)
             st.rerun()
         
@@ -329,25 +372,33 @@ def render_about_page():
     
     st.markdown("---")
     
+    st.subheader(f"{UIStyler.get_icon('about')} About Document Q&A System")
+    
+    st.write("This system allows you to upload documents and ask intelligent questions about their content using AI-powered analysis.")
+    
+    st.subheader(f"{UIStyler.get_icon('success')} Current Features")
+    
+    # Display features as simple list
+    features = [
+        "File Upload: Support for PDF, TXT, and DOCX formats",
+        "File Validation: Format and size validation (max 10MB)",
+        "Text Extraction: Intelligent text extraction from various formats",
+        "LangGraph Processing: Enhanced document processing workflow with Gemini AI",
+        "Document Storage: Persistent document management with SQLite",
+        "Q&A Engine: Ask intelligent questions about your documents",
+        "Context Search: Find relevant information quickly",
+        "Document Management: View, organize, and delete processed documents",
+        "Chat Interface: Interactive Q&A with conversation history",
+        "Real-time Processing: Progress tracking and status updates",
+        "Error Handling: Comprehensive error handling and recovery",
+        "Logging: Detailed logging for debugging and monitoring",
+        "System Integration: Unified application architecture"
+    ]
+    
+    for feature in features:
+        st.write(f"- {UIStyler.get_icon('success')} **{feature}**")
+    
     st.markdown("""
-    ## About Document Q&A System
-    
-    This system allows you to upload documents and ask intelligent questions about their content using AI-powered analysis.
-    
-    ### Current Features
-    - ✅ **File Upload**: Support for PDF, TXT, and DOCX formats
-    - ✅ **File Validation**: Format and size validation (max 10MB)
-    - ✅ **Text Extraction**: Intelligent text extraction from various formats
-    - ✅ **LangGraph Processing**: Enhanced document processing workflow with Gemini AI
-    - ✅ **Document Storage**: Persistent document management with SQLite
-    - ✅ **Q&A Engine**: Ask intelligent questions about your documents
-    - ✅ **Context Search**: Find relevant information quickly
-    - ✅ **Document Management**: View, organize, and delete processed documents
-    - ✅ **Chat Interface**: Interactive Q&A with conversation history
-    - ✅ **Real-time Processing**: Progress tracking and status updates
-    - ✅ **Error Handling**: Comprehensive error handling and recovery
-    - ✅ **Logging**: Detailed logging for debugging and monitoring
-    - ✅ **System Integration**: Unified application architecture
     
     ### How It Works
     1. **Upload**: Upload your documents through the web interface
