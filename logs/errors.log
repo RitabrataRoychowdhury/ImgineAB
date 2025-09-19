@@ -1,0 +1,7 @@
+2025-09-19 22:19:58,002 - src.services.contract_analyst_engine - ERROR - generate_contract_analysis:241 - Error generating contract analysis: API Error
+2025-09-19 22:19:58,003 - src.services.qa_engine - ERROR - generate_answer:166 - Error generating answer: API Error
+2025-09-19 22:31:49,137 - src.services.contract_analyst_engine - ERROR - generate_contract_analysis:257 - Error generating contract analysis: API Error
+2025-09-19 22:31:49,137 - src.services.qa_engine - ERROR - generate_answer:166 - Error generating answer: API Error
+2025-09-19 22:33:30,454 - src.services.contract_analyst_engine - ERROR - generate_contract_analysis:257 - Error generating contract analysis: API Error
+2025-09-19 22:33:30,454 - src.services.qa_engine - ERROR - generate_answer:166 - Error generating answer: API Error
+2025-09-19 22:35:39,738 - src.services.qa_engine - ERROR - generate_answer:166 - Error generating answer: API Error

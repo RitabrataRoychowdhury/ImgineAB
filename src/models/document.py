@@ -24,6 +24,12 @@ class Document:
     embeddings: Optional[List[float]] = None
     created_at: datetime = field(default_factory=datetime.now)
     updated_at: datetime = field(default_factory=datetime.now)
+    # Enhanced fields for legal documents
+    is_legal_document: bool = False
+    legal_document_type: Optional[str] = None  # "MTA", "NDA", "Service Agreement", etc.
+    contract_parties: Optional[List[str]] = None
+    key_legal_terms: Optional[List[str]] = None
+    legal_analysis_confidence: float = 0.0
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert document to dictionary for storage."""
@@ -40,7 +46,12 @@ class Document:
             'analysis': self.analysis,
             'summary': self.summary,
             'created_at': self.created_at.isoformat(),
-            'updated_at': self.updated_at.isoformat()
+            'updated_at': self.updated_at.isoformat(),
+            'is_legal_document': self.is_legal_document,
+            'legal_document_type': self.legal_document_type,
+            'contract_parties': json.dumps(self.contract_parties) if self.contract_parties else None,
+            'key_legal_terms': json.dumps(self.key_legal_terms) if self.key_legal_terms else None,
+            'legal_analysis_confidence': self.legal_analysis_confidence
         }
     
     @classmethod
@@ -59,7 +70,12 @@ class Document:
             analysis=data.get('analysis'),
             summary=data.get('summary'),
             created_at=datetime.fromisoformat(data['created_at']) if data.get('created_at') else datetime.now(),
-            updated_at=datetime.fromisoformat(data['updated_at']) if data.get('updated_at') else datetime.now()
+            updated_at=datetime.fromisoformat(data['updated_at']) if data.get('updated_at') else datetime.now(),
+            is_legal_document=data.get('is_legal_document', False),
+            legal_document_type=data.get('legal_document_type'),
+            contract_parties=json.loads(data['contract_parties']) if data.get('contract_parties') else None,
+            key_legal_terms=json.loads(data['key_legal_terms']) if data.get('key_legal_terms') else None,
+            legal_analysis_confidence=data.get('legal_analysis_confidence', 0.0)
         )
 
 
@@ -139,6 +155,26 @@ class QASession:
             document_id=data['document_id'],
             created_at=datetime.fromisoformat(data['created_at']) if data.get('created_at') else datetime.now()
         )
+
+
+@dataclass
+class ContractAnalysisSession(QASession):
+    """Enhanced QA session for legal document analysis."""
+    analysis_mode: str = "contract"  # "contract" or "standard"
+    legal_document_type: Optional[str] = None
+    structured_responses: List[Dict[str, Any]] = field(default_factory=list)
+    
+    def add_contract_interaction(self, question: str, structured_response: Dict[str, str], sources: Optional[List[str]] = None):
+        """Add a contract analysis interaction to the session."""
+        interaction = {
+            'question': question,
+            'structured_response': structured_response,
+            'sources': sources or [],
+            'timestamp': datetime.now().isoformat(),
+            'analysis_mode': self.analysis_mode
+        }
+        self.questions.append(interaction)
+        self.structured_responses.append(structured_response)
 
 
 @dataclass

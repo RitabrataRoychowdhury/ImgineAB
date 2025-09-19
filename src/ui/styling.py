@@ -53,6 +53,13 @@ class UIStyler:
         'error': '⚠️',
         'success': '✅',
         'loading': '⏳',
+        
+        # Legal document icons
+        'legal': '🏛️',
+        'contract': '📋',
+        'mta': '🧬',
+        'nda': '🤐',
+        'analysis': '⚖️',
     }
     
     @classmethod

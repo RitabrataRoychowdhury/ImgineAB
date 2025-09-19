@@ -6,8 +6,10 @@ from typing import List, Optional, Dict, Any
 
 from src.storage.document_storage import DocumentStorage
 from src.models.document import Document, ProcessingJob
+from src.services.contract_analyst_engine import create_contract_analyst_engine
 from src.ui.qa_interface import render_qa_for_document
 from src.ui.styling import UIStyler
+from src.config import config
 
 
 class DocumentManager:
@@ -15,12 +17,20 @@ class DocumentManager:
     
     def __init__(self):
         self.storage = DocumentStorage()
+        self.contract_engine = None
+        
+        # Initialize contract engine for legal document detection
+        api_key = config.get_gemini_api_key()
+        if api_key:
+            self.contract_engine = create_contract_analyst_engine(api_key, self.storage)
         
         # Initialize session state
         if 'selected_doc_for_qa' not in st.session_state:
             st.session_state.selected_doc_for_qa = None
         if 'show_delete_confirmation' not in st.session_state:
             st.session_state.show_delete_confirmation = {}
+        if 'legal_document_cache' not in st.session_state:
+            st.session_state.legal_document_cache = {}
     
     def render_document_management(self) -> None:
         """Render the main document management interface."""
@@ -90,8 +100,9 @@ class DocumentManager:
             st.info(f"No documents found with status: {status_filter}")
             return
         
-        # Display documents
+        # Display documents with legal document detection
         for doc in filtered_docs:
+            self._detect_legal_document_if_needed(doc)
             self._render_document_card(doc)
     
     def _filter_and_sort_documents(self, documents: List[Document], status_filter: str, sort_by: str) -> List[Document]:
@@ -125,37 +136,72 @@ class DocumentManager:
         
         return filtered_docs
     
+    def _detect_legal_document_if_needed(self, document: Document) -> None:
+        """Detect legal document type if not already cached."""
+        if document.id not in st.session_state.legal_document_cache and self.contract_engine:
+            is_legal, doc_type, confidence = self.contract_engine.detect_legal_document(document)
+            st.session_state.legal_document_cache[document.id] = {
+                'is_legal': is_legal,
+                'document_type': doc_type,
+                'confidence': confidence
+            }
+    
     def _render_document_card(self, document: Document) -> None:
-        """Render a single document card with enhanced visual indicators."""
+        """Render a single document card with enhanced visual indicators and legal document badges."""
         # Enhanced document card with modern styling
         with st.container():
             # Create enhanced document card HTML
             file_icon = UIStyler.get_icon(document.file_type)
             status_badge = UIStyler.create_status_badge(document.processing_status)
             
+            # Check for legal document
+            legal_info = st.session_state.legal_document_cache.get(document.id, {})
+            is_legal = document.is_legal_document or legal_info.get('is_legal', False)
+            
             # Format file size
             file_size_mb = document.file_size / (1024 * 1024)
             size_display = f"{file_size_mb:.1f} MB" if file_size_mb >= 1 else f"{document.file_size:,} bytes"
             
-            # Meta information with icons
+            # Meta information with icons and legal indicator
             meta_items = [
                 f"{UIStyler.get_icon('documents')} {document.file_type.upper()}",
                 f"{UIStyler.get_icon('metrics')} {size_display}",
                 f"{UIStyler.get_icon('history')} {document.upload_timestamp.strftime('%Y-%m-%d %H:%M')}"
             ]
+            
+            # Add legal document indicator
+            if is_legal:
+                legal_type = document.legal_document_type or legal_info.get('document_type', 'Legal')
+                meta_items.insert(1, f"🏛️ {legal_type}")
+            
             meta_html = " • ".join(meta_items)
             
             # Header row with enhanced styling
             col1, col2, col3 = st.columns([3, 1, 1])
             
             with col1:
-                st.write(f"**{file_icon} {document.title}** {status_badge}")
+                title_display = f"**{file_icon} {document.title}** {status_badge}"
+                
+                # Add legal document badge
+                if is_legal:
+                    legal_type = document.legal_document_type or legal_info.get('document_type', 'Legal')
+                    confidence = document.legal_analysis_confidence or legal_info.get('confidence', 0.0)
+                    title_display += f" 🏛️ **{legal_type}**"
+                
+                st.write(title_display)
                 st.caption(meta_html)
+                
+                # Show contract analysis capability
+                if is_legal and document.processing_status == 'completed':
+                    st.success("🏛️ Contract Analysis Available")
             
             with col2:
                 # Enhanced Q&A button (only for completed documents)
                 if document.processing_status == 'completed':
-                    if st.button(f"{UIStyler.get_icon('qa')} Q&A", key=f"qa_{document.id}", help="Ask questions about this document"):
+                    button_text = "🏛️ Contract Q&A" if is_legal else f"{UIStyler.get_icon('qa')} Q&A"
+                    button_help = "Ask questions with contract analysis" if is_legal else "Ask questions about this document"
+                    
+                    if st.button(button_text, key=f"qa_{document.id}", help=button_help):
                         st.session_state.selected_doc_for_qa = document.id
                         st.rerun()
                 else:
@@ -185,7 +231,18 @@ class DocumentManager:
             st.write("**Basic Information:**")
             st.write(f"• **ID:** `{document.id}`")
             st.write(f"• **Title:** {document.title}")
-            st.write(f"• **Type:** {document.document_type or 'Unknown'}")
+            
+            # Show legal document information
+            legal_info = st.session_state.legal_document_cache.get(document.id, {})
+            is_legal = document.is_legal_document or legal_info.get('is_legal', False)
+            
+            if is_legal:
+                legal_type = document.legal_document_type or legal_info.get('document_type', 'Legal Document')
+                confidence = document.legal_analysis_confidence or legal_info.get('confidence', 0.0)
+                st.write(f"• **🏛️ Legal Document:** {legal_type} (Confidence: {confidence:.1%})")
+            else:
+                st.write(f"• **Type:** {document.document_type or 'Unknown'}")
+            
             st.write(f"• **File Format:** {document.file_type.upper()}")
             st.write(f"• **File Size:** {document.file_size:,} bytes")
             st.write(f"• **Status:** {document.processing_status.title()}")
