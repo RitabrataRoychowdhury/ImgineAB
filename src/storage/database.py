@@ -25,7 +25,9 @@ class DatabaseManager:
     def _initialize_database(self):
         """Initialize database with required tables."""
         with self.get_connection() as conn:
-            self._create_tables(conn)
+            # First create basic tables
+            self._create_basic_tables(conn)
+            # Enhanced tables will be created by migrations
     
     def get_connection(self) -> sqlite3.Connection:
         """Get database connection with row factory."""
@@ -33,10 +35,10 @@ class DatabaseManager:
         conn.row_factory = sqlite3.Row
         return conn
     
-    def _create_tables(self, conn: sqlite3.Connection):
-        """Create all required tables."""
+    def _create_basic_tables(self, conn: sqlite3.Connection):
+        """Create basic required tables for initial setup."""
         
-        # Documents table
+        # Documents table (basic version)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS documents (
                 id TEXT PRIMARY KEY,
@@ -71,7 +73,7 @@ class DatabaseManager:
             )
         """)
         
-        # Q&A sessions table
+        # Q&A sessions table (basic version)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS qa_sessions (
                 session_id TEXT PRIMARY KEY,
@@ -81,7 +83,7 @@ class DatabaseManager:
             )
         """)
         
-        # Q&A interactions table
+        # Q&A interactions table (basic version)
         conn.execute("""
             CREATE TABLE IF NOT EXISTS qa_interactions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -94,13 +96,17 @@ class DatabaseManager:
             )
         """)
         
-        # Create indexes for better performance
+        # Create basic indexes for better performance
         conn.execute("CREATE INDEX IF NOT EXISTS idx_documents_status ON documents (processing_status)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_processing_jobs_document ON processing_jobs (document_id)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_qa_sessions_document ON qa_sessions (document_id)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_qa_interactions_session ON qa_interactions (session_id)")
         
         conn.commit()
+    
+    def _create_tables(self, conn: sqlite3.Connection):
+        """Create all required tables (for backward compatibility)."""
+        self._create_basic_tables(conn)
     
     def reset_database(self):
         """Reset database by dropping and recreating all tables."""

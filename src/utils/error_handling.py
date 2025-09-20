@@ -2,7 +2,7 @@
 
 import functools
 import traceback
-from typing import Any, Callable, Dict, Optional, Tuple, Union
+from typing import Any, Callable, Dict, Optional, Tuple, Union, List
 from enum import Enum
 
 from src.utils.logging_config import get_logger
@@ -22,6 +22,12 @@ class ErrorType(Enum):
     STORAGE_ERROR = "storage_error"
     QA_ERROR = "qa_error"
     SYSTEM_ERROR = "system_error"
+    # Enhanced Q&A specific errors
+    ENHANCED_ANALYSIS_ERROR = "enhanced_analysis_error"
+    CONVERSATIONAL_AI_ERROR = "conversational_ai_error"
+    EXCEL_GENERATION_ERROR = "excel_generation_error"
+    TEMPLATE_ERROR = "template_error"
+    CONTEXT_MANAGEMENT_ERROR = "context_management_error"
 
 
 class DocumentQAError(Exception):
@@ -119,6 +125,46 @@ class QAError(DocumentQAError):
         super().__init__(message, ErrorType.QA_ERROR, details, original_error)
 
 
+class EnhancedAnalysisError(DocumentQAError):
+    """Error during enhanced analysis operations."""
+    
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None, 
+                 original_error: Optional[Exception] = None):
+        super().__init__(message, ErrorType.ENHANCED_ANALYSIS_ERROR, details, original_error)
+
+
+class ConversationalAIError(DocumentQAError):
+    """Error during conversational AI operations."""
+    
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None, 
+                 original_error: Optional[Exception] = None):
+        super().__init__(message, ErrorType.CONVERSATIONAL_AI_ERROR, details, original_error)
+
+
+class ExcelGenerationError(DocumentQAError):
+    """Error during Excel report generation."""
+    
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None, 
+                 original_error: Optional[Exception] = None):
+        super().__init__(message, ErrorType.EXCEL_GENERATION_ERROR, details, original_error)
+
+
+class TemplateError(DocumentQAError):
+    """Error during template operations."""
+    
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None, 
+                 original_error: Optional[Exception] = None):
+        super().__init__(message, ErrorType.TEMPLATE_ERROR, details, original_error)
+
+
+class ContextManagementError(DocumentQAError):
+    """Error during conversation context management."""
+    
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None, 
+                 original_error: Optional[Exception] = None):
+        super().__init__(message, ErrorType.CONTEXT_MANAGEMENT_ERROR, details, original_error)
+
+
 def handle_errors(error_type: ErrorType = ErrorType.SYSTEM_ERROR, 
                  return_error_dict: bool = False,
                  log_error: bool = True):
@@ -202,7 +248,13 @@ def _get_user_friendly_message(error: DocumentQAError) -> str:
         ErrorType.TIMEOUT_ERROR: "The operation took too long to complete. Please try again.",
         ErrorType.STORAGE_ERROR: "There was a problem storing your document. Please try again.",
         ErrorType.QA_ERROR: "There was a problem answering your question. Please try rephrasing it.",
-        ErrorType.SYSTEM_ERROR: "An unexpected error occurred. Please try again."
+        ErrorType.SYSTEM_ERROR: "An unexpected error occurred. Please try again.",
+        # Enhanced Q&A specific messages
+        ErrorType.ENHANCED_ANALYSIS_ERROR: "There was a problem with the enhanced analysis. Basic analysis is still available.",
+        ErrorType.CONVERSATIONAL_AI_ERROR: "There was a problem with the conversational AI. Please try a simpler question.",
+        ErrorType.EXCEL_GENERATION_ERROR: "There was a problem generating the Excel report. You can try downloading as CSV instead.",
+        ErrorType.TEMPLATE_ERROR: "There was a problem with the analysis template. Using default analysis instead.",
+        ErrorType.CONTEXT_MANAGEMENT_ERROR: "There was a problem managing conversation context. Your conversation will continue with basic functionality."
     }
     
     return error_messages.get(error.error_type, error.message)
@@ -280,5 +332,127 @@ class ErrorRecovery:
         return decorator
 
 
-# Global error recovery instance
+class GracefulDegradation:
+    """Utilities for graceful degradation when enhanced features fail."""
+    
+    @staticmethod
+    def with_fallback(primary_func: Callable, fallback_func: Callable, 
+                     error_types: Optional[List[ErrorType]] = None) -> Callable:
+        """Decorator that provides fallback functionality when primary function fails."""
+        def decorator(func: Callable) -> Callable:
+            @functools.wraps(func)
+            def wrapper(*args, **kwargs):
+                try:
+                    return primary_func(*args, **kwargs)
+                except DocumentQAError as e:
+                    if error_types is None or e.error_type in error_types:
+                        logger.warning(f"Primary function failed, using fallback: {str(e)}")
+                        return fallback_func(*args, **kwargs)
+                    else:
+                        raise
+                except Exception as e:
+                    logger.warning(f"Primary function failed with unexpected error, using fallback: {str(e)}")
+                    return fallback_func(*args, **kwargs)
+            return wrapper
+        return decorator
+    
+    @staticmethod
+    def enhanced_with_basic_fallback(enhanced_func: Callable, basic_func: Callable):
+        """Specific fallback for enhanced features to basic functionality."""
+        return GracefulDegradation.with_fallback(
+            enhanced_func, 
+            basic_func,
+            [ErrorType.ENHANCED_ANALYSIS_ERROR, ErrorType.CONVERSATIONAL_AI_ERROR, 
+             ErrorType.TEMPLATE_ERROR, ErrorType.API_ERROR]
+        )
+    
+    @staticmethod
+    def safe_enhanced_operation(operation: Callable, fallback_result: Any = None, 
+                              log_errors: bool = True) -> Tuple[Any, bool]:
+        """
+        Safely execute enhanced operation with fallback result.
+        
+        Returns:
+            Tuple of (result, success_flag)
+        """
+        try:
+            result = operation()
+            return result, True
+        except (EnhancedAnalysisError, ConversationalAIError, TemplateError, 
+                ExcelGenerationError, ContextManagementError) as e:
+            if log_errors:
+                logger.warning(f"Enhanced operation failed gracefully: {str(e)}")
+            return fallback_result, False
+        except Exception as e:
+            if log_errors:
+                logger.error(f"Enhanced operation failed unexpectedly: {str(e)}")
+            return fallback_result, False
+
+
+class AlternativeFormats:
+    """Utilities for providing alternative data formats when primary format fails."""
+    
+    @staticmethod
+    def excel_to_csv_fallback(data: List[Dict[str, Any]], filename: str) -> str:
+        """Convert data to CSV format when Excel generation fails."""
+        import csv
+        import io
+        
+        if not data:
+            return ""
+        
+        output = io.StringIO()
+        writer = csv.DictWriter(output, fieldnames=data[0].keys())
+        writer.writeheader()
+        writer.writerows(data)
+        
+        return output.getvalue()
+    
+    @staticmethod
+    def excel_to_json_fallback(data: List[Dict[str, Any]]) -> str:
+        """Convert data to JSON format when Excel generation fails."""
+        import json
+        return json.dumps(data, indent=2, default=str)
+    
+    @staticmethod
+    def create_fallback_report(data: Dict[str, Any], format_type: str = "json") -> str:
+        """Create fallback report in specified format."""
+        if format_type == "csv":
+            # Flatten data for CSV
+            flattened_data = []
+            for section, content in data.items():
+                if isinstance(content, list):
+                    for item in content:
+                        if isinstance(item, dict):
+                            item['section'] = section
+                            flattened_data.append(item)
+                        else:
+                            flattened_data.append({'section': section, 'content': str(item)})
+                else:
+                    flattened_data.append({'section': section, 'content': str(content)})
+            
+            return AlternativeFormats.excel_to_csv_fallback(flattened_data, "fallback_report")
+        
+        elif format_type == "json":
+            return AlternativeFormats.excel_to_json_fallback([data])
+        
+        else:
+            # Plain text fallback
+            text_output = []
+            for section, content in data.items():
+                text_output.append(f"\n{section.upper()}:")
+                text_output.append("-" * len(section))
+                if isinstance(content, list):
+                    for item in content:
+                        text_output.append(f"• {str(item)}")
+                else:
+                    text_output.append(str(content))
+                text_output.append("")
+            
+            return "\n".join(text_output)
+
+
+# Global instances
 error_recovery = ErrorRecovery()
+graceful_degradation = GracefulDegradation()
+alternative_formats = AlternativeFormats()

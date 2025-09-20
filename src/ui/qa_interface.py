@@ -1,25 +1,41 @@
-"""Q&A Interface for document question answering with chat-like interaction."""
+"""Enhanced Q&A Interface with comprehensive analysis, conversational AI, and Excel generation."""
 
 import streamlit as st
 import uuid
+import os
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 
 from src.services.qa_engine import QAEngine, create_qa_engine
 from src.services.contract_analyst_engine import ContractAnalystEngine, create_contract_analyst_engine
+from src.services.enhanced_summary_analyzer import EnhancedSummaryAnalyzer
+from src.services.conversational_ai_engine import ConversationalAIEngine
+from src.services.excel_report_generator import ExcelReportGenerator
+from src.services.template_engine import TemplateEngine
 from src.storage.document_storage import DocumentStorage
-from src.models.document import Document, QASession
+from src.storage.enhanced_storage import enhanced_storage
+from src.storage.migrations import migrator
+from src.models.document import Document, QASession, AnalysisTemplate
+from src.models.conversational import ConversationContext
 from src.config import config
 from src.ui.styling import UIStyler
 
 
-class QAInterface:
-    """Streamlit interface for document Q&A functionality."""
+class EnhancedQAInterface:
+    """Enhanced Streamlit interface for document Q&A with comprehensive analysis capabilities."""
     
     def __init__(self):
         self.storage = DocumentStorage()
+        self.enhanced_storage = enhanced_storage
         self.qa_engine = None
         self.contract_engine = None
+        self.enhanced_analyzer = None
+        self.conversational_engine = None
+        self.excel_generator = None
+        self.template_engine = None
+        
+        # Run database migrations on initialization
+        self._ensure_database_ready()
         
         # Initialize session state
         if 'qa_sessions' not in st.session_state:
@@ -32,10 +48,26 @@ class QAInterface:
             st.session_state.analysis_mode = 'standard'
         if 'legal_document_info' not in st.session_state:
             st.session_state.legal_document_info = {}
+        if 'enhanced_summary_visible' not in st.session_state:
+            st.session_state.enhanced_summary_visible = False
+        if 'selected_template' not in st.session_state:
+            st.session_state.selected_template = None
+        if 'conversation_context' not in st.session_state:
+            st.session_state.conversation_context = {}
+        if 'excel_reports' not in st.session_state:
+            st.session_state.excel_reports = []
+    
+    def _ensure_database_ready(self):
+        """Ensure database schema is up to date."""
+        try:
+            migrator.run_migrations()
+        except Exception as e:
+            st.error(f"Database migration failed: {e}")
+            st.stop()
     
     def render_qa_interface(self, document_id: Optional[str] = None) -> None:
         """
-        Render the main Q&A interface.
+        Render the enhanced Q&A interface with comprehensive analysis capabilities.
         
         Args:
             document_id: Optional document ID to start Q&A with
@@ -47,11 +79,19 @@ class QAInterface:
             st.info(f"{UIStyler.get_icon('info')} You can get an API key from: https://makersuite.google.com/app/apikey")
             return
         
-        # Initialize QA engines
+        # Initialize all engines
         if not self.qa_engine:
             self.qa_engine = create_qa_engine(api_key, self.storage)
         if not self.contract_engine:
             self.contract_engine = create_contract_analyst_engine(api_key, self.storage)
+        if not self.enhanced_analyzer:
+            self.enhanced_analyzer = EnhancedSummaryAnalyzer(self.storage, api_key)
+        if not self.conversational_engine:
+            self.conversational_engine = ConversationalAIEngine(self.qa_engine, self.contract_engine)
+        if not self.excel_generator:
+            self.excel_generator = ExcelReportGenerator(self.storage)
+        if not self.template_engine:
+            self.template_engine = TemplateEngine(self.storage)
         
         # Document selection section
         selected_doc = self._render_document_selector(document_id)
@@ -60,8 +100,17 @@ class QAInterface:
             st.info("👆 Please select a document to start asking questions.")
             return
         
-        # Q&A session section
-        self._render_qa_session(selected_doc)
+        # Enhanced summary section
+        self._render_enhanced_summary_section(selected_doc)
+        
+        # Template selection section
+        self._render_template_selection(selected_doc)
+        
+        # Q&A session section with conversational AI
+        self._render_enhanced_qa_session(selected_doc)
+        
+        # Excel report generation section
+        self._render_excel_generation_section(selected_doc)
     
     def _render_document_selector(self, preselected_doc_id: Optional[str] = None) -> Optional[Document]:
         """Render document selection interface with enhanced visual indicators."""
@@ -519,15 +568,685 @@ class QAInterface:
                 # Show breakdown if both modes have sessions
                 if len(standard_sessions) > 0 and len(contract_sessions) > 0:
                     st.caption(f"💬 {len(standard_sessions)} standard, 🏛️ {len(contract_sessions)} contract")
+    
+    # Enhanced Q&A Interface Methods
+    
+    def _render_enhanced_summary_section(self, document: Document) -> None:
+        """Render enhanced summary section with risk assessment and comprehensive analysis."""
+        st.markdown("---")
+        
+        # Enhanced summary header with toggle
+        col1, col2, col3 = st.columns([2, 1, 1])
+        
+        with col1:
+            st.subheader("🔍 Enhanced Document Analysis")
+        
+        with col2:
+            if st.button("📊 Generate Analysis", help="Generate comprehensive analysis"):
+                self._generate_comprehensive_analysis(document)
+        
+        with col3:
+            show_summary = st.toggle("Show Analysis", value=st.session_state.enhanced_summary_visible)
+            st.session_state.enhanced_summary_visible = show_summary
+        
+        if show_summary:
+            # Get existing analysis or show placeholder
+            analysis = self.enhanced_storage.get_document_analysis(document.id)
+            
+            if analysis:
+                self._display_comprehensive_analysis(analysis)
+            else:
+                st.info("🔍 No comprehensive analysis available. Click 'Generate Analysis' to create one.")
+    
+    def _generate_comprehensive_analysis(self, document: Document) -> None:
+        """Generate comprehensive analysis for the document."""
+        with st.spinner("🔍 Generating comprehensive analysis..."):
+            try:
+                # Get selected template
+                template = None
+                if st.session_state.selected_template:
+                    template = self.enhanced_storage.get_analysis_template(st.session_state.selected_template)
+                
+                # Generate analysis
+                analysis = self.enhanced_analyzer.analyze_document_comprehensive(document, template)
+                
+                # Save to database
+                self.enhanced_storage.save_comprehensive_analysis(analysis)
+                
+                st.success("✅ Comprehensive analysis generated successfully!")
+                st.rerun()
+                
+            except Exception as e:
+                st.error(f"❌ Error generating analysis: {str(e)}")
+    
+    def _display_comprehensive_analysis(self, analysis) -> None:
+        """Display comprehensive analysis results."""
+        # Create tabs for different analysis sections
+        tab1, tab2, tab3, tab4, tab5 = st.tabs([
+            "📋 Overview", "⚠️ Risks", "📝 Commitments", "📅 Dates", "🔑 Key Terms"
+        ])
+        
+        with tab1:
+            self._display_analysis_overview(analysis)
+        
+        with tab2:
+            self._display_risk_assessment(analysis.risks)
+        
+        with tab3:
+            self._display_commitments(analysis.commitments)
+        
+        with tab4:
+            self._display_deliverable_dates(analysis.deliverable_dates)
+        
+        with tab5:
+            self._display_key_terms(analysis.key_legal_terms)
+    
+    def _display_analysis_overview(self, analysis) -> None:
+        """Display analysis overview section."""
+        st.markdown("### 📋 Document Overview")
+        st.write(analysis.document_overview)
+        
+        if analysis.key_findings:
+            st.markdown("### 🔍 Key Findings")
+            for i, finding in enumerate(analysis.key_findings, 1):
+                st.write(f"{i}. {finding}")
+        
+        if analysis.critical_information:
+            st.markdown("### ⚠️ Critical Information")
+            for i, info in enumerate(analysis.critical_information, 1):
+                st.warning(f"{i}. {info}")
+        
+        if analysis.recommended_actions:
+            st.markdown("### 📋 Recommended Actions")
+            for i, action in enumerate(analysis.recommended_actions, 1):
+                st.write(f"{i}. {action}")
+        
+        if analysis.executive_recommendation:
+            st.markdown("### 🎯 Executive Recommendation")
+            st.info(analysis.executive_recommendation)
+        
+        # Show confidence score
+        confidence_color = "green" if analysis.confidence_score > 0.7 else "orange" if analysis.confidence_score > 0.4 else "red"
+        st.markdown(f"**Confidence Score:** :{confidence_color}[{analysis.confidence_score:.1%}]")
+    
+    def _display_risk_assessment(self, risks: List) -> None:
+        """Display risk assessment section."""
+        if not risks:
+            st.info("No risks identified in this document.")
+            return
+        
+        # Risk summary
+        risk_counts = {"High": 0, "Medium": 0, "Low": 0}
+        for risk in risks:
+            risk_counts[risk.severity] = risk_counts.get(risk.severity, 0) + 1
+        
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Total Risks", len(risks))
+        with col2:
+            st.metric("High Risk", risk_counts["High"], delta=None if risk_counts["High"] == 0 else "⚠️")
+        with col3:
+            st.metric("Medium Risk", risk_counts["Medium"])
+        with col4:
+            st.metric("Low Risk", risk_counts["Low"])
+        
+        # Risk details
+        for risk in risks:
+            severity_color = {"High": "red", "Medium": "orange", "Low": "green"}[risk.severity]
+            
+            with st.expander(f":{severity_color}[{risk.severity}] {risk.description[:100]}..."):
+                st.write(f"**Category:** {risk.category}")
+                st.write(f"**Affected Parties:** {', '.join(risk.affected_parties)}")
+                
+                if risk.mitigation_suggestions:
+                    st.write("**Mitigation Suggestions:**")
+                    for suggestion in risk.mitigation_suggestions:
+                        st.write(f"• {suggestion}")
+                
+                st.write(f"**Source:** {risk.source_text[:200]}...")
+                st.write(f"**Confidence:** {risk.confidence:.1%}")
+    
+    def _display_commitments(self, commitments: List) -> None:
+        """Display commitments section."""
+        if not commitments:
+            st.info("No commitments identified in this document.")
+            return
+        
+        # Commitments summary
+        active_commitments = [c for c in commitments if c.status == "Active"]
+        upcoming_deadlines = [c for c in commitments if c.deadline and c.deadline > datetime.now()]
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Total Commitments", len(commitments))
+        with col2:
+            st.metric("Active Commitments", len(active_commitments))
+        
+        # Commitments table
+        if commitments:
+            commitment_data = []
+            for commitment in commitments:
+                commitment_data.append({
+                    "Description": commitment.description[:50] + "..." if len(commitment.description) > 50 else commitment.description,
+                    "Obligated Party": commitment.obligated_party,
+                    "Beneficiary": commitment.beneficiary_party,
+                    "Deadline": commitment.deadline.strftime("%Y-%m-%d") if commitment.deadline else "No deadline",
+                    "Status": commitment.status,
+                    "Type": commitment.commitment_type
+                })
+            
+            st.dataframe(commitment_data, use_container_width=True)
+    
+    def _display_deliverable_dates(self, dates: List) -> None:
+        """Display deliverable dates section."""
+        if not dates:
+            st.info("No important dates identified in this document.")
+            return
+        
+        # Dates summary
+        upcoming_dates = [d for d in dates if d.date > datetime.now()]
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Total Dates", len(dates))
+        with col2:
+            st.metric("Upcoming Dates", len(upcoming_dates))
+        
+        # Dates timeline
+        if dates:
+            date_data = []
+            for date in sorted(dates, key=lambda x: x.date):
+                status_icon = "🔴" if date.date < datetime.now() else "🟡" if date.date < datetime.now().replace(day=datetime.now().day + 30) else "🟢"
+                date_data.append({
+                    "Date": date.date.strftime("%Y-%m-%d"),
+                    "Description": date.description,
+                    "Responsible Party": date.responsible_party,
+                    "Type": date.deliverable_type,
+                    "Status": f"{status_icon} {date.status}"
+                })
+            
+            st.dataframe(date_data, use_container_width=True)
+    
+    def _display_key_terms(self, terms: List[str]) -> None:
+        """Display key legal terms section."""
+        if not terms:
+            st.info("No key legal terms identified in this document.")
+            return
+        
+        # Display terms in a grid
+        cols = st.columns(3)
+        for i, term in enumerate(terms):
+            with cols[i % 3]:
+                st.write(f"• {term}")
+    
+    def _render_template_selection(self, document: Document) -> None:
+        """Render template selection interface."""
+        st.markdown("---")
+        st.subheader("📋 Analysis Templates")
+        
+        # Get available templates
+        templates = self.enhanced_storage.list_analysis_templates()
+        
+        col1, col2, col3 = st.columns([2, 1, 1])
+        
+        with col1:
+            if templates:
+                template_options = {"Default Analysis": None}
+                for template in templates:
+                    template_options[f"{template.name} - {template.description}"] = template.template_id
+                
+                selected_template_name = st.selectbox(
+                    "Choose analysis template:",
+                    options=list(template_options.keys()),
+                    help="Select a template to customize the analysis focus"
+                )
+                
+                st.session_state.selected_template = template_options[selected_template_name]
+            else:
+                st.info("No custom templates available. Using default analysis.")
+        
+        with col2:
+            if st.button("➕ Create Template"):
+                self._show_template_creation_dialog()
+        
+        with col3:
+            if templates and st.button("📝 Manage Templates"):
+                self._show_template_management()
+    
+    def _render_enhanced_qa_session(self, document: Document) -> None:
+        """Render enhanced Q&A session with conversational AI capabilities."""
+        st.markdown("---")
+        
+        # Show analysis mode header with conversational indicator
+        if st.session_state.analysis_mode == 'contract':
+            st.subheader("🏛️ Contract Analysis - Conversational Q&A")
+            st.info("**Enhanced Mode Active** - Natural conversation with legal analysis capabilities")
+        else:
+            st.subheader("💬 Conversational Q&A")
+            st.info("**Conversational Mode** - Ask questions naturally, I'll understand context and provide detailed responses")
+        
+        # Get or create Q&A session
+        session_id = self._get_or_create_session(document.id)
+        
+        # Use conversational engine for enhanced interactions
+        session = self._get_enhanced_session(session_id)
+        
+        # Display enhanced chat history
+        self._render_enhanced_chat_history(session, document)
+        
+        # Enhanced question input with conversation features
+        self._render_enhanced_question_input(document, session_id)
+        
+        # Session management with conversation context
+        self._render_enhanced_session_management(document.id, session_id)
+    
+    def _get_enhanced_session(self, session_id: str):
+        """Get enhanced session with conversation context."""
+        # Get base session
+        analysis_mode = st.session_state.analysis_mode
+        engine = self.contract_engine if analysis_mode == 'contract' else self.qa_engine
+        session = engine.get_qa_session(session_id)
+        
+        # Get conversation context
+        context = self.enhanced_storage.get_conversation_context(session_id)
+        if context:
+            st.session_state.conversation_context[session_id] = context
+        
+        return session
+    
+    def _render_enhanced_chat_history(self, session, document: Document) -> None:
+        """Render enhanced chat history with conversation context."""
+        if not session or not session.questions:
+            st.info("💬 Start a conversation! Ask me anything about the document - I can handle complex questions and remember our discussion.")
+            
+            # Show conversation starters
+            self._show_conversation_starters(document)
+            return
+        
+        st.write("**💬 Conversation History:**")
+        
+        # Display questions and answers with enhanced formatting
+        for i, interaction in enumerate(session.questions):
+            # Question
+            with st.chat_message("user"):
+                st.write(interaction['question'])
+            
+            # Enhanced answer with conversation features
+            with st.chat_message("assistant"):
+                # Check for conversational response
+                if interaction.get('conversation_tone'):
+                    tone_icon = {"professional": "🏛️", "casual": "💬", "technical": "🔧"}.get(
+                        interaction.get('conversation_tone', 'professional'), "💬"
+                    )
+                    st.caption(f"{tone_icon} {interaction.get('conversation_tone', 'professional').title()} tone")
+                
+                # Display main answer
+                if interaction.get('analysis_mode') == 'contract' and interaction.get('structured_response'):
+                    self._render_structured_response(interaction['structured_response'])
+                else:
+                    st.write(interaction['answer'])
+                
+                # Show follow-up suggestions
+                if interaction.get('follow_up_suggestions'):
+                    with st.expander("💡 Follow-up suggestions", expanded=False):
+                        for suggestion in interaction['follow_up_suggestions']:
+                            if st.button(f"💬 {suggestion}", key=f"followup_{i}_{hash(suggestion)}"):
+                                st.session_state.question_input = suggestion
+                                st.rerun()
+                
+                # Show sources and context
+                if interaction.get('sources'):
+                    with st.expander(f"{UIStyler.get_icon('documents')} Sources & Context", expanded=False):
+                        for source in interaction['sources']:
+                            st.write(f"{UIStyler.get_icon('info')} {source}")
+                
+                # Show conversation metadata
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    if interaction.get('analysis_mode'):
+                        mode_icon = "🏛️" if interaction['analysis_mode'] == 'contract' else "💬"
+                        st.caption(f"{mode_icon} {interaction['analysis_mode'].title()}")
+                
+                with col2:
+                    if interaction.get('confidence'):
+                        confidence = interaction['confidence']
+                        conf_color = "green" if confidence > 0.7 else "orange" if confidence > 0.4 else "red"
+                        st.caption(f":{conf_color}[Confidence: {confidence:.1%}]")
+                
+                with col3:
+                    if interaction.get('timestamp'):
+                        timestamp = datetime.fromisoformat(interaction['timestamp'])
+                        st.caption(f"🕒 {timestamp.strftime('%H:%M:%S')}")
+    
+    def _show_conversation_starters(self, document: Document) -> None:
+        """Show conversation starter suggestions."""
+        with st.expander("💡 Conversation Starters", expanded=True):
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.write("**🔍 Analysis Questions:**")
+                starters = [
+                    "What are the main points in this document?",
+                    "Are there any risks I should be aware of?",
+                    "What actions do I need to take?",
+                    "Can you explain this in simple terms?"
+                ]
+                
+                for starter in starters:
+                    if st.button(f"💬 {starter}", key=f"starter_{hash(starter)}"):
+                        st.session_state.question_input = starter
+                        st.rerun()
+            
+            with col2:
+                if st.session_state.analysis_mode == 'contract':
+                    st.write("**🏛️ Legal Questions:**")
+                    legal_starters = [
+                        "Who are the parties in this agreement?",
+                        "What are the key obligations?",
+                        "Are there any concerning clauses?",
+                        "What are the termination conditions?"
+                    ]
+                    
+                    for starter in legal_starters:
+                        if st.button(f"🏛️ {starter}", key=f"legal_starter_{hash(starter)}"):
+                            st.session_state.question_input = starter
+                            st.rerun()
+    
+    def _render_enhanced_question_input(self, document: Document, session_id: str) -> None:
+        """Render enhanced question input with conversational features."""
+        with st.form("enhanced_question_form", clear_on_submit=True):
+            question = st.text_area(
+                "Ask me anything about the document:",
+                placeholder="e.g., 'What are the main risks and what should I do about them?' or 'Explain the key terms in simple language'",
+                height=100,
+                key="question_input",
+                help="I can handle complex questions, follow-up questions, and remember our conversation context."
+            )
+            
+            col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+            
+            with col1:
+                submit_button = st.form_submit_button("💬 Ask", type="primary")
+            
+            with col2:
+                excel_button = st.form_submit_button("📊 Ask & Export")
+            
+            with col3:
+                example_button = st.form_submit_button("💡 Examples")
+            
+            with col4:
+                clear_button = st.form_submit_button("🔄 Clear Context")
+        
+        # Handle different types of submissions
+        if submit_button and question.strip():
+            self._process_conversational_question(question.strip(), document, session_id)
+        
+        if excel_button and question.strip():
+            self._process_question_with_excel(question.strip(), document, session_id)
+        
+        if example_button:
+            self._show_example_questions(document)
+        
+        if clear_button:
+            self._clear_conversation_context(session_id)
+    
+    def _process_conversational_question(self, question: str, document: Document, session_id: str) -> None:
+        """Process question using conversational AI engine."""
+        with st.spinner("💬 Understanding your question and generating response..."):
+            try:
+                # Use conversational AI engine
+                response = self.conversational_engine.answer_conversational_question(
+                    question, document.id, session_id
+                )
+                
+                # Save enhanced interaction
+                self._save_enhanced_interaction(session_id, question, response, document)
+                
+                # Display immediate response
+                st.success("✅ Response generated!")
+                
+                with st.chat_message("user"):
+                    st.write(question)
+                
+                with st.chat_message("assistant"):
+                    st.write(response.answer)
+                    
+                    # Show follow-up suggestions
+                    if response.follow_up_suggestions:
+                        with st.expander("💡 Follow-up suggestions", expanded=True):
+                            for suggestion in response.follow_up_suggestions:
+                                if st.button(f"💬 {suggestion}", key=f"immediate_followup_{hash(suggestion)}"):
+                                    st.session_state.question_input = suggestion
+                                    st.rerun()
+                
+                # Refresh to show in history
+                st.rerun()
+                
+            except Exception as e:
+                st.error(f"❌ Error processing question: {str(e)}")
+    
+    def _process_question_with_excel(self, question: str, document: Document, session_id: str) -> None:
+        """Process question and generate Excel report."""
+        with st.spinner("💬 Processing question and preparing Excel report..."):
+            try:
+                # First process the question
+                response = self.conversational_engine.answer_conversational_question(
+                    question, document.id, session_id
+                )
+                
+                # Save interaction
+                self._save_enhanced_interaction(session_id, question, response, document)
+                
+                # Generate Excel report
+                excel_report = self.excel_generator.generate_conversation_report(session_id)
+                
+                # Save report metadata
+                self.enhanced_storage.save_excel_report(excel_report)
+                st.session_state.excel_reports.append(excel_report)
+                
+                st.success("✅ Response generated and Excel report created!")
+                
+                # Show download link
+                col1, col2 = st.columns(2)
+                with col1:
+                    st.write(response.answer)
+                
+                with col2:
+                    st.download_button(
+                        label="📊 Download Excel Report",
+                        data=open(excel_report.file_path, 'rb').read(),
+                        file_name=excel_report.filename,
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
+                
+                st.rerun()
+                
+            except Exception as e:
+                st.error(f"❌ Error processing question with Excel: {str(e)}")
+    
+    def _save_enhanced_interaction(self, session_id: str, question: str, response, document: Document) -> None:
+        """Save enhanced interaction with conversational metadata."""
+        # Get appropriate engine
+        analysis_mode = st.session_state.analysis_mode
+        engine = self.contract_engine if analysis_mode == 'contract' else self.qa_engine
+        
+        # Create enhanced interaction data
+        interaction_data = {
+            'question': question,
+            'answer': response.answer,
+            'sources': response.context_used,
+            'analysis_mode': response.analysis_mode,
+            'conversation_tone': response.conversation_tone,
+            'follow_up_suggestions': response.follow_up_suggestions,
+            'confidence': response.confidence,
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        # Add to session
+        session = engine.get_qa_session(session_id)
+        if session:
+            session.questions.append(interaction_data)
+            
+            # Update conversation context
+            if session_id in st.session_state.conversation_context:
+                context = st.session_state.conversation_context[session_id]
+                self.conversational_engine.manage_conversation_context(session_id, question, response.answer)
+    
+    def _clear_conversation_context(self, session_id: str) -> None:
+        """Clear conversation context for fresh start."""
+        if session_id in st.session_state.conversation_context:
+            del st.session_state.conversation_context[session_id]
+        
+        # Clear from conversational engine
+        if hasattr(self.conversational_engine, 'conversation_contexts'):
+            if session_id in self.conversational_engine.conversation_contexts:
+                del self.conversational_engine.conversation_contexts[session_id]
+        
+        st.success("🔄 Conversation context cleared!")
+        st.rerun()
+    
+    def _render_enhanced_session_management(self, document_id: str, session_id: str) -> None:
+        """Render enhanced session management with conversation features."""
+        st.markdown("---")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            if st.button("🔄 New Session", help="Start a fresh conversation"):
+                analysis_mode = st.session_state.analysis_mode
+                session_key = f"session_{document_id}_{analysis_mode}"
+                if session_key in st.session_state.qa_sessions:
+                    del st.session_state.qa_sessions[session_key]
+                self._clear_conversation_context(session_id)
+                st.success("New session started!")
+                st.rerun()
+        
+        with col2:
+            # Show conversation context info
+            if session_id in st.session_state.conversation_context:
+                context = st.session_state.conversation_context[session_id]
+                st.info(f"💬 Topic: {context.current_topic or 'General'}")
+            else:
+                st.info("💬 New conversation")
+        
+        with col3:
+            # Show session stats
+            analysis_mode = st.session_state.analysis_mode
+            engine = self.contract_engine if analysis_mode == 'contract' else self.qa_engine
+            session = engine.get_qa_session(session_id)
+            if session:
+                question_count = len(session.questions)
+                mode_icon = "🏛️" if analysis_mode == 'contract' else "💬"
+                st.info(f"{mode_icon} {question_count} questions")
+        
+        with col4:
+            # Excel report generation
+            if st.button("📊 Generate Report", help="Create Excel report from conversation"):
+                self._generate_conversation_excel(session_id)
+    
+    def _generate_conversation_excel(self, session_id: str) -> None:
+        """Generate Excel report from conversation."""
+        with st.spinner("📊 Generating Excel report from conversation..."):
+            try:
+                excel_report = self.excel_generator.generate_conversation_report(session_id)
+                self.enhanced_storage.save_excel_report(excel_report)
+                st.session_state.excel_reports.append(excel_report)
+                
+                st.success("✅ Excel report generated!")
+                
+                # Show download button
+                st.download_button(
+                    label="📊 Download Conversation Report",
+                    data=open(excel_report.file_path, 'rb').read(),
+                    file_name=excel_report.filename,
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
+                
+            except Exception as e:
+                st.error(f"❌ Error generating Excel report: {str(e)}")
+    
+    def _render_excel_generation_section(self, document: Document) -> None:
+        """Render Excel report generation section."""
+        st.markdown("---")
+        st.subheader("📊 Excel Report Generation")
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            if st.button("📋 Document Analysis Report", help="Generate comprehensive document analysis report"):
+                self._generate_document_excel(document.id, "comprehensive")
+        
+        with col2:
+            if st.button("⚠️ Risks Only Report", help="Generate report focusing on risks"):
+                self._generate_document_excel(document.id, "risks_only")
+        
+        with col3:
+            if st.button("📝 Commitments Report", help="Generate report focusing on commitments"):
+                self._generate_document_excel(document.id, "commitments_only")
+        
+        # Show existing reports
+        if st.session_state.excel_reports:
+            st.write("**📊 Generated Reports:**")
+            for report in st.session_state.excel_reports[-5:]:  # Show last 5 reports
+                col1, col2, col3 = st.columns([2, 1, 1])
+                
+                with col1:
+                    st.write(f"📄 {report.filename}")
+                
+                with col2:
+                    st.write(f"🕒 {report.created_at.strftime('%H:%M:%S')}")
+                
+                with col3:
+                    if os.path.exists(report.file_path):
+                        st.download_button(
+                            label="⬇️ Download",
+                            data=open(report.file_path, 'rb').read(),
+                            file_name=report.filename,
+                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            key=f"download_{report.report_id}"
+                        )
+    
+    def _generate_document_excel(self, document_id: str, report_type: str) -> None:
+        """Generate Excel report for document analysis."""
+        with st.spinner(f"📊 Generating {report_type} Excel report..."):
+            try:
+                excel_report = self.excel_generator.generate_document_report(document_id, report_type)
+                self.enhanced_storage.save_excel_report(excel_report)
+                st.session_state.excel_reports.append(excel_report)
+                
+                st.success(f"✅ {report_type.title()} report generated!")
+                
+                # Show immediate download
+                st.download_button(
+                    label=f"📊 Download {report_type.title()} Report",
+                    data=open(excel_report.file_path, 'rb').read(),
+                    file_name=excel_report.filename,
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
+                
+            except Exception as e:
+                st.error(f"❌ Error generating {report_type} report: {str(e)}")
+    
+    def _show_template_creation_dialog(self) -> None:
+        """Show template creation dialog."""
+        st.info("Template creation feature coming soon!")
+    
+    def _show_template_management(self) -> None:
+        """Show template management interface."""
+        st.info("Template management feature coming soon!")
 
 
 def render_qa_page():
-    """Render the Q&A page."""
-    qa_interface = QAInterface()
+    """Render the enhanced Q&A page."""
+    qa_interface = EnhancedQAInterface()
     qa_interface.render_qa_interface()
 
 
 def render_qa_for_document(document_id: str):
-    """Render Q&A interface for a specific document."""
-    qa_interface = QAInterface()
+    """Render enhanced Q&A interface for a specific document."""
+    qa_interface = EnhancedQAInterface()
     qa_interface.render_qa_interface(document_id)
+
+
+# Backward compatibility
+QAInterface = EnhancedQAInterface
