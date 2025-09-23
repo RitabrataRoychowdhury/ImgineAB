@@ -1,12 +1,37 @@
 #!/bin/bash
 
 # Document Q&A System - Run Script
-# This script sets up the virtual environment and runs the application
+# This script sets up the virtual environment, cleans up caches, and runs the application
 
 echo "🚀 Document Q&A System - Run Script"
 echo "===================================="
 
-# Check if Python 3 is available
+# -------------------------------------------------------------------
+# 🧹 Step 0: Cleanup junk files before starting
+# -------------------------------------------------------------------
+echo ""
+echo "🧹 Cleaning up caches, logs, and old environments..."
+
+# remove python cache
+find . -type d -name "__pycache__" -exec rm -rf {} +
+find . -type d -name ".pytest_cache" -exec rm -rf {} +
+rm -rf .mypy_cache .coverage coverage.xml htmlcov
+
+# remove virtual environments (if present)
+rm -rf venv .venv
+
+# remove logs and database (if they are local only)
+rm -rf logs/*.log data/database/*.db
+
+# remove stray pyc/pyo files
+find . -name "*.py[co]" -delete
+
+echo "✅ Cleanup done"
+echo ""
+
+# -------------------------------------------------------------------
+# Step 1: Python check
+# -------------------------------------------------------------------
 if ! command -v python3 &> /dev/null; then
     echo "❌ Python 3 is required but not installed"
     echo "   Please install Python 3.8+ and try again"
@@ -15,21 +40,19 @@ fi
 
 echo "🐍 Python version: $(python3 --version)"
 
-# Create virtual environment if it doesn't exist
-if [ ! -d "venv" ]; then
-    echo ""
-    echo "📦 Creating virtual environment..."
-    python3 -m venv venv
-    
-    if [ $? -ne 0 ]; then
-        echo "❌ Failed to create virtual environment"
-        exit 1
-    fi
-    
-    echo "✅ Virtual environment created"
-else
-    echo "✅ Virtual environment already exists"
+# -------------------------------------------------------------------
+# Step 2: Create virtual environment
+# -------------------------------------------------------------------
+echo ""
+echo "📦 Creating virtual environment..."
+python3 -m venv venv
+
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to create virtual environment"
+    exit 1
 fi
+
+echo "✅ Virtual environment created"
 
 # Activate virtual environment
 echo ""
@@ -43,31 +66,30 @@ fi
 
 echo "✅ Virtual environment activated: $VIRTUAL_ENV"
 
-# Upgrade pip
+# -------------------------------------------------------------------
+# Step 3: Install dependencies
+# -------------------------------------------------------------------
 echo ""
 echo "⬆️  Upgrading pip..."
 pip install --upgrade pip --quiet
 
-# Install dependencies
 echo ""
 echo "📚 Installing dependencies..."
 if [ -f "requirements.txt" ]; then
     pip install -r requirements.txt --quiet
-    
     if [ $? -ne 0 ]; then
         echo "❌ Failed to install dependencies"
-        echo "   Check requirements.txt and try again"
         exit 1
     fi
-    
     echo "✅ Dependencies installed successfully"
 else
     echo "❌ requirements.txt not found"
-    echo "   Please ensure requirements.txt exists in the project directory"
     exit 1
 fi
 
-# Check environment configuration
+# -------------------------------------------------------------------
+# Step 4: Environment setup
+# -------------------------------------------------------------------
 echo ""
 echo "⚙️  Checking configuration..."
 
@@ -76,29 +98,24 @@ if [ ! -f ".env" ]; then
         echo "📋 Creating .env from .env.example..."
         cp .env.example .env
         echo "⚠️  Please edit .env with your actual Gemini API key"
-        echo "   You can get an API key from: https://makersuite.google.com/app/apikey"
     else
         echo "❌ No .env or .env.example file found"
-        echo "   Please create a .env file with your configuration"
         exit 1
     fi
 fi
 
-# Check if API key is configured
 if grep -q "your_gemini_api_key_here" .env 2>/dev/null; then
     echo "⚠️  Warning: Default API key detected in .env"
-    echo "   Please update .env with your actual Gemini API key"
-    echo "   You can get one from: https://makersuite.google.com/app/apikey"
-    echo ""
     read -p "❓ Continue anyway? (y/N): " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo "   Please update your .env file and run this script again"
         exit 1
     fi
 fi
 
-# Create necessary directories
+# -------------------------------------------------------------------
+# Step 5: Create necessary directories
+# -------------------------------------------------------------------
 echo ""
 echo "📁 Creating necessary directories..."
 mkdir -p data/database
@@ -106,18 +123,20 @@ mkdir -p data/documents
 mkdir -p logs
 echo "✅ Directories created"
 
-# Run system health check
+# -------------------------------------------------------------------
+# Step 6: Health check
+# -------------------------------------------------------------------
 echo ""
 echo "🔍 Running system health check..."
 python main.py --check
-
 if [ $? -ne 0 ]; then
     echo "❌ System health check failed"
-    echo "   Please check your configuration and try again"
     exit 1
 fi
 
-# Ask user what they want to do
+# -------------------------------------------------------------------
+# Step 7: Main menu
+# -------------------------------------------------------------------
 echo ""
 echo "🎯 What would you like to do?"
 echo "   1) Start web interface (recommended)"

@@ -436,6 +436,60 @@ class ContractAnalystEngine(QAEngine):
                 'analysis_mode': 'error'
             }
     
+    def analyze_question(self, question: str, document_id: str) -> Dict[str, Any]:
+        """
+        Analyze a question for the enhanced response router.
+        
+        This method is used by the enhanced response router to get contract analysis
+        while maintaining backward compatibility with existing functionality.
+        
+        Args:
+            question: The user's question
+            document_id: ID of the document to query
+            
+        Returns:
+            Dictionary containing analysis results compatible with enhanced response format
+        """
+        try:
+            # Get the document
+            document = self.storage.get_document_with_embeddings(document_id)
+            if not document:
+                return {
+                    'response': "Document not found or not processed yet.",
+                    'error': 'Document not found'
+                }
+            
+            # Use existing contract analysis logic
+            context_sections = self.find_legal_context(question, document)
+            
+            if not context_sections:
+                return {
+                    'response': "I couldn't find relevant information in the document to answer your question.",
+                    'error': 'No relevant context found'
+                }
+            
+            # Generate structured contract analysis
+            analysis = self.generate_contract_analysis(question, context_sections, document)
+            
+            # Return in format expected by enhanced response router
+            return {
+                'response': self._format_contract_response(analysis),
+                'direct_evidence': analysis.direct_evidence,
+                'plain_explanation': analysis.plain_explanation,
+                'implication_analysis': analysis.implication_analysis,
+                'sources': analysis.sources,
+                'confidence': analysis.confidence,
+                'document_type': analysis.document_type,
+                'legal_terms_found': analysis.legal_terms_found
+            }
+            
+        except Exception as e:
+            logger.error(f"Error in analyze_question: {e}")
+            return {
+                'response': "I encountered an error while analyzing this question. Please try again.",
+                'error': str(e)
+            }
+    
     def _format_contract_response(self, analysis: ContractAnalysisResponse) -> str:
         """Format the structured contract analysis into a readable response."""
         formatted_parts = []

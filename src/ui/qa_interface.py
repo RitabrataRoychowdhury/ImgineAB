@@ -12,6 +12,7 @@ from src.services.enhanced_summary_analyzer import EnhancedSummaryAnalyzer
 from src.services.conversational_ai_engine import ConversationalAIEngine
 from src.services.excel_report_generator import ExcelReportGenerator
 from src.services.template_engine import TemplateEngine
+from src.services.enhanced_response_router import EnhancedResponseRouter
 from src.storage.document_storage import DocumentStorage
 from src.storage.enhanced_storage import enhanced_storage
 from src.storage.migrations import migrator
@@ -19,6 +20,9 @@ from src.models.document import Document, QASession, AnalysisTemplate
 from src.models.conversational import ConversationContext
 from src.config import config
 from src.ui.styling import UIStyler
+from src.utils.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 
 class EnhancedQAInterface:
@@ -33,6 +37,7 @@ class EnhancedQAInterface:
         self.conversational_engine = None
         self.excel_generator = None
         self.template_engine = None
+        self.enhanced_router = None
         
         # Run database migrations on initialization
         self._ensure_database_ready()
@@ -56,6 +61,10 @@ class EnhancedQAInterface:
             st.session_state.conversation_context = {}
         if 'excel_reports' not in st.session_state:
             st.session_state.excel_reports = []
+        if 'enhanced_mode_enabled' not in st.session_state:
+            st.session_state.enhanced_mode_enabled = True  # Enable enhanced mode by default
+        if 'conversation_context_persistence' not in st.session_state:
+            st.session_state.conversation_context_persistence = {}
     
     def _ensure_database_ready(self):
         """Ensure database schema is up to date."""
@@ -64,6 +73,40 @@ class EnhancedQAInterface:
         except Exception as e:
             st.error(f"Database migration failed: {e}")
             st.stop()
+    
+    def _ensure_engines_initialized(self):
+        """Ensure all engines are properly initialized."""
+        try:
+            # Initialize QA engine if needed
+            if not self.qa_engine:
+                from src.services.qa_engine import QAEngine
+                import os
+                api_key = os.getenv('GEMINI_API_KEY', 'test_key')
+                self.qa_engine = QAEngine(self.storage, api_key)
+            
+            # Initialize contract engine if needed
+            if not self.contract_engine:
+                from src.services.contract_analyst_engine import ContractAnalystEngine
+                import os
+                api_key = os.getenv('GEMINI_API_KEY', 'test_key')
+                self.contract_engine = ContractAnalystEngine(self.storage, api_key)
+            
+            # Initialize enhanced router if needed and enhanced mode is enabled
+            if st.session_state.enhanced_mode_enabled and not self.enhanced_router:
+                try:
+                    from src.services.enhanced_response_router import EnhancedResponseRouter
+                    import os
+                    api_key = os.getenv('GEMINI_API_KEY', 'test_key')
+                    self.enhanced_router = EnhancedResponseRouter(self.storage, api_key)
+                except Exception as e:
+                    logger.warning(f"Could not initialize enhanced router: {e}")
+                    # Disable enhanced mode if initialization fails
+                    st.session_state.enhanced_mode_enabled = False
+                    
+        except Exception as e:
+            logger.error(f"Error initializing engines: {e}")
+            # Fallback to basic functionality
+            st.session_state.enhanced_mode_enabled = False
     
     def render_qa_interface(self, document_id: Optional[str] = None) -> None:
         """
@@ -92,6 +135,11 @@ class EnhancedQAInterface:
             self.excel_generator = ExcelReportGenerator(self.storage)
         if not self.template_engine:
             self.template_engine = TemplateEngine(self.storage)
+        if not self.enhanced_router:
+            self.enhanced_router = EnhancedResponseRouter(self.storage, api_key)
+        
+        # Ensure backward compatibility
+        self._ensure_backward_compatibility()
         
         # Document selection section
         selected_doc = self._render_document_selector(document_id)
@@ -100,13 +148,16 @@ class EnhancedQAInterface:
             st.info("👆 Please select a document to start asking questions.")
             return
         
+        # Enhanced mode configuration
+        self._render_enhanced_mode_configuration()
+        
         # Enhanced summary section
         self._render_enhanced_summary_section(selected_doc)
         
         # Template selection section
         self._render_template_selection(selected_doc)
         
-        # Q&A session section with conversational AI
+        # Q&A session section with enhanced routing
         self._render_enhanced_qa_session(selected_doc)
         
         # Excel report generation section
@@ -204,6 +255,34 @@ class EnhancedQAInterface:
         st.session_state.selected_document = selected_doc.id
         
         return selected_doc
+    
+    def _render_enhanced_mode_configuration(self) -> None:
+        """Render enhanced mode configuration toggles."""
+        st.markdown("---")
+        
+        col1, col2, col3 = st.columns([2, 1, 1])
+        
+        with col1:
+            st.subheader("🚀 Enhanced Assistant Configuration")
+        
+        with col2:
+            enhanced_enabled = st.toggle(
+                "Enhanced Mode", 
+                value=st.session_state.enhanced_mode_enabled,
+                help="Enable enhanced conversational AI with fallback responses and context awareness"
+            )
+            st.session_state.enhanced_mode_enabled = enhanced_enabled
+        
+        with col3:
+            if enhanced_enabled:
+                st.success("🚀 Enhanced")
+            else:
+                st.info("📝 Standard")
+        
+        if enhanced_enabled:
+            st.info("🚀 **Enhanced Mode Active** - The assistant will provide graceful responses to off-topic questions, maintain conversation context, and offer specialized MTA expertise when applicable.")
+        else:
+            st.info("📝 **Standard Mode** - Traditional document Q&A with structured contract analysis for legal documents.")
     
     def _detect_and_set_analysis_mode(self, document: Document) -> None:
         """Detect if document is legal and set appropriate analysis mode."""
@@ -363,13 +442,29 @@ class EnhancedQAInterface:
     
     def _process_question(self, question: str, document: Document, session_id: str) -> None:
         """Process a user question and display the answer."""
+        # Check if enhanced mode is enabled and try it first
+        if st.session_state.enhanced_mode_enabled:
+            self._process_conversational_question(question, document, session_id)
+        else:
+            self._process_standard_question(question, document, session_id)
+    
+    def _process_standard_question(self, question: str, document: Document, session_id: str) -> None:
+        """Process question using standard contract analysis."""
         analysis_mode = st.session_state.analysis_mode
         spinner_text = "🏛️ Analyzing legal document..." if analysis_mode == 'contract' else "🤔 Thinking about your question..."
         
         with st.spinner(spinner_text):
             try:
+                # Initialize engines if needed
+                self._ensure_engines_initialized()
+                
                 # Use appropriate engine based on analysis mode
                 engine = self.contract_engine if analysis_mode == 'contract' else self.qa_engine
+                
+                if not engine:
+                    st.error("❌ Analysis engine not available. Please try again.")
+                    return
+                
                 result = engine.answer_question(question, document.id, session_id)
                 
                 # Display the answer
@@ -424,6 +519,7 @@ class EnhancedQAInterface:
                 st.rerun()
                 
             except Exception as e:
+                logger.error(f"Error in standard question processing: {e}")
                 st.error(f"❌ Error processing question: {str(e)}")
     
     def _show_example_questions(self, document: Document) -> None:
@@ -990,40 +1086,318 @@ class EnhancedQAInterface:
         if clear_button:
             self._clear_conversation_context(session_id)
     
+    def _clear_conversation_context(self, session_id: str) -> None:
+        """Clear conversation context for enhanced mode."""
+        try:
+            # Clear enhanced context manager
+            if self.enhanced_router and hasattr(self.enhanced_router.context_manager, 'conversations'):
+                if session_id in self.enhanced_router.context_manager.conversations:
+                    del self.enhanced_router.context_manager.conversations[session_id]
+            
+            # Clear session state context
+            if session_id in st.session_state.conversation_context_persistence:
+                del st.session_state.conversation_context_persistence[session_id]
+            
+            st.success("🔄 Conversation context cleared! Starting fresh.")
+            st.rerun()
+            
+        except Exception as e:
+            logger.error(f"Error clearing conversation context: {e}")
+            st.error("❌ Error clearing context. Please try again.")
+    
+    def _handle_enhanced_mode_error(self, error: Exception, question: str, document: Document, session_id: str) -> None:
+        """Handle enhanced mode errors with graceful degradation."""
+        logger.error(f"Enhanced mode error: {error}")
+        
+        # Show user-friendly error message
+        st.warning("⚠️ Enhanced mode encountered an issue. Falling back to standard analysis...")
+        
+        # Temporarily disable enhanced mode
+        st.session_state.enhanced_mode_enabled = False
+        
+        # Try with standard mode
+        try:
+            # Ensure engines are initialized
+            self._ensure_engines_initialized()
+            
+            analysis_mode = st.session_state.analysis_mode
+            engine = self.contract_engine if analysis_mode == 'contract' else self.qa_engine
+            
+            if not engine:
+                # Create a basic response if no engine is available
+                self._create_basic_fallback_response(question)
+                return
+            
+            result = engine.answer_question(question, document.id, session_id)
+            
+            # Display fallback response
+            with st.chat_message("user"):
+                st.write(question)
+            
+            with st.chat_message("assistant"):
+                answer = result.get('answer', 'I apologize, but I encountered an error processing your question.')
+                
+                # If we still get an error, provide a helpful response
+                if result.get('error') or not answer or answer.strip() == "":
+                    answer = self._generate_helpful_fallback_response(question, document)
+                
+                st.write(answer)
+                
+                if result.get('sources'):
+                    with st.expander("📚 Sources", expanded=False):
+                        for source in result['sources']:
+                            st.write(f"• {source}")
+                
+                st.caption("📝 Standard mode (enhanced mode temporarily disabled)")
+            
+            # Offer to re-enable enhanced mode
+            if st.button("🚀 Try Enhanced Mode Again"):
+                st.session_state.enhanced_mode_enabled = True
+                st.rerun()
+                
+        except Exception as fallback_error:
+            logger.error(f"Fallback also failed: {fallback_error}")
+            self._create_basic_fallback_response(question)
+    
+    def _create_basic_fallback_response(self, question: str) -> None:
+        """Create a basic fallback response when all engines fail."""
+        with st.chat_message("user"):
+            st.write(question)
+        
+        with st.chat_message("assistant"):
+            st.write("I apologize, but I encountered an issue processing your question. Let me try to help in a different way.")
+            st.write("Could you try rephrasing your question, or ask about a specific aspect of the contract?")
+            st.caption("📝 Basic fallback mode")
+    
+    def _generate_helpful_fallback_response(self, question: str, document: Document) -> str:
+        """Generate a helpful fallback response based on question patterns."""
+        question_lower = question.lower()
+        
+        # Check for common question patterns and provide helpful responses
+        # Order matters - check more specific patterns first
+        if any(word in question_lower for word in ['risk', 'risks', 'liability', 'danger', 'dangerous']):
+            return "This appears to be asking about risks or liability. Look for sections on 'Liability', 'Risk', 'Indemnification', or 'Limitation of Liability' in the document."
+        
+        elif 'intellectual property' in question_lower or (question_lower.startswith('ip ') or ' ip ' in question_lower or question_lower.endswith(' ip')) or any(word in question_lower for word in ['ownership', 'owns', 'owner']) or ('rights' in question_lower and any(word in question_lower for word in ['property', 'ownership'])):
+            return "This appears to be asking about intellectual property or ownership rights. Check sections on 'Intellectual Property', 'Ownership', or 'Rights' in the document."
+        
+        elif any(word in question_lower for word in ['who', 'parties', 'involved']) and not any(word in question_lower for word in ['owns', 'ownership']):
+            return "This appears to be asking about the parties involved in the agreement. Please check the beginning of the document for party information, typically in the first few paragraphs or sections."
+        
+        elif any(word in question_lower for word in ['when', 'date', 'expire', 'term']):
+            return "This appears to be asking about dates or terms. Look for sections mentioning 'Term', 'Effective Date', or 'Expiration' in the document."
+        
+        elif any(word in question_lower for word in ['what', 'obligations', 'requirements', 'must']):
+            return "This appears to be asking about obligations or requirements. Check sections related to 'Obligations', 'Requirements', or 'Responsibilities' in the document."
+        
+        else:
+            return f"I'm having trouble processing your specific question right now. However, I can help you analyze this document. Try asking about specific sections, parties, dates, obligations, or risks mentioned in the document."
+    
+    def _ensure_backward_compatibility(self) -> None:
+        """Ensure backward compatibility with existing functionality."""
+        # Verify all required engines are initialized
+        required_engines = ['qa_engine', 'contract_engine', 'enhanced_router']
+        
+        for engine_name in required_engines:
+            if not hasattr(self, engine_name) or getattr(self, engine_name) is None:
+                logger.warning(f"Missing {engine_name}, enhanced mode may not work properly")
+        
+        # Ensure session state has required keys
+        required_keys = ['enhanced_mode_enabled', 'conversation_context_persistence']
+        for key in required_keys:
+            if key not in st.session_state:
+                if key == 'enhanced_mode_enabled':
+                    st.session_state[key] = True
+                else:
+                    st.session_state[key] = {}
+    
+    def _validate_enhanced_response(self, enhanced_response) -> bool:
+        """Validate enhanced response before processing."""
+        try:
+            # Check required attributes
+            required_attrs = ['content', 'response_type', 'confidence', 'sources', 'suggestions']
+            
+            for attr in required_attrs:
+                if not hasattr(enhanced_response, attr):
+                    logger.warning(f"Enhanced response missing attribute: {attr}")
+                    return False
+            
+            # Validate content is not empty
+            if not enhanced_response.content or not enhanced_response.content.strip():
+                logger.warning("Enhanced response has empty content")
+                return False
+            
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error validating enhanced response: {e}")
+            return False
+    
     def _process_conversational_question(self, question: str, document: Document, session_id: str) -> None:
-        """Process question using conversational AI engine."""
-        with st.spinner("💬 Understanding your question and generating response..."):
+        """Process question using enhanced response router or fallback to conversational AI."""
+        spinner_text = "🚀 Processing with enhanced AI..." if st.session_state.enhanced_mode_enabled else "💬 Understanding your question..."
+        
+        with st.spinner(spinner_text):
             try:
-                # Use conversational AI engine
-                response = self.conversational_engine.answer_conversational_question(
-                    question, document.id, session_id
-                )
+                # Ensure engines are initialized
+                self._ensure_engines_initialized()
                 
-                # Save enhanced interaction
-                self._save_enhanced_interaction(session_id, question, response, document)
-                
-                # Display immediate response
-                st.success("✅ Response generated!")
-                
-                with st.chat_message("user"):
-                    st.write(question)
-                
-                with st.chat_message("assistant"):
-                    st.write(response.answer)
+                if st.session_state.enhanced_mode_enabled and self.enhanced_router:
+                    # Use enhanced response router
+                    enhanced_response = self.enhanced_router.route_question(
+                        question, document.id, session_id, document
+                    )
                     
-                    # Show follow-up suggestions
-                    if response.follow_up_suggestions:
-                        with st.expander("💡 Follow-up suggestions", expanded=True):
-                            for suggestion in response.follow_up_suggestions:
-                                if st.button(f"💬 {suggestion}", key=f"immediate_followup_{hash(suggestion)}"):
-                                    st.session_state.question_input = suggestion
-                                    st.rerun()
+                    # Validate enhanced response
+                    if not self._validate_enhanced_response(enhanced_response):
+                        raise ValueError("Invalid enhanced response received")
+                    
+                    # Convert enhanced response to display format
+                    response_data = self._convert_enhanced_response_to_display(enhanced_response, question, document)
+                    
+                    # Save enhanced interaction with context persistence
+                    self._save_enhanced_interaction_with_context(session_id, question, enhanced_response, document)
+                    
+                    # Display immediate response
+                    st.success("✅ Enhanced response generated!")
+                    self._display_immediate_response(question, response_data)
+                    
+                else:
+                    # Fall back to standard processing
+                    self._process_standard_question(question, document, session_id)
+                    return
                 
                 # Refresh to show in history
                 st.rerun()
                 
             except Exception as e:
-                st.error(f"❌ Error processing question: {str(e)}")
+                logger.error(f"Error processing conversational question: {e}")
+                # Graceful degradation
+                self._handle_enhanced_mode_error(e, question, document, session_id)
+    
+    def _convert_enhanced_response_to_display(self, enhanced_response, question: str, document: Document) -> Dict[str, Any]:
+        """Convert enhanced response to display format."""
+        return {
+            'answer': enhanced_response.content,
+            'follow_up_suggestions': enhanced_response.suggestions,
+            'sources': enhanced_response.sources,
+            'confidence': enhanced_response.confidence,
+            'response_type': enhanced_response.response_type,
+            'tone': enhanced_response.tone,
+            'structured_format': enhanced_response.structured_format,
+            'context_used': enhanced_response.context_used,
+            'enhanced_metadata': {
+                'timestamp': enhanced_response.timestamp,
+                'response_type': enhanced_response.response_type,
+                'tone': enhanced_response.tone
+            }
+        }
+    
+    def _save_enhanced_interaction_with_context(self, session_id: str, question: str, enhanced_response, document: Document) -> None:
+        """Save enhanced interaction with conversation context persistence."""
+        try:
+            # Save to conversation context persistence
+            if session_id not in st.session_state.conversation_context_persistence:
+                st.session_state.conversation_context_persistence[session_id] = []
+            
+            interaction_data = {
+                'question': question,
+                'answer': enhanced_response.content,
+                'response_type': enhanced_response.response_type,
+                'tone': enhanced_response.tone,
+                'confidence': enhanced_response.confidence,
+                'sources': enhanced_response.sources,
+                'suggestions': enhanced_response.suggestions,
+                'context_used': enhanced_response.context_used,
+                'timestamp': enhanced_response.timestamp.isoformat(),
+                'enhanced_mode': True,
+                'structured_response': enhanced_response.structured_format
+            }
+            
+            st.session_state.conversation_context_persistence[session_id].append(interaction_data)
+            
+            # Also save to standard storage for backward compatibility
+            analysis_mode = st.session_state.analysis_mode
+            engine = self.contract_engine if analysis_mode == 'contract' else self.qa_engine
+            
+            # Format for standard storage
+            formatted_answer = enhanced_response.content
+            if enhanced_response.structured_format:
+                # If we have structured format, use it
+                formatted_answer = self._format_structured_response_for_storage(enhanced_response.structured_format)
+            
+            engine.storage.add_qa_interaction(session_id, question, formatted_answer, enhanced_response.sources)
+            
+        except Exception as e:
+            logger.error(f"Error saving enhanced interaction: {e}")
+    
+    def _display_immediate_response(self, question: str, response_data: Dict[str, Any]) -> None:
+        """Display immediate response in chat format."""
+        with st.chat_message("user"):
+            st.write(question)
+        
+        with st.chat_message("assistant"):
+            # Show enhanced mode indicator
+            if st.session_state.enhanced_mode_enabled and response_data.get('enhanced_metadata'):
+                metadata = response_data['enhanced_metadata']
+                tone_value = metadata.get('tone', 'professional')
+                # Handle enum values
+                if hasattr(tone_value, 'value'):
+                    tone_str = tone_value.value
+                else:
+                    tone_str = str(tone_value)
+                
+                tone_icon = {"professional": "🏛️", "conversational": "💬", "playful": "😊"}.get(tone_str, "💬")
+                
+                response_type_value = metadata.get('response_type', 'response')
+                if hasattr(response_type_value, 'value'):
+                    response_type_str = response_type_value.value
+                else:
+                    response_type_str = str(response_type_value)
+                
+                response_type_text = response_type_str.replace('_', ' ').title()
+                st.caption(f"{tone_icon} Enhanced {response_type_text}")
+            
+            # Display main answer
+            if response_data.get('structured_format'):
+                self._render_structured_response(response_data['structured_format'])
+            else:
+                st.write(response_data['answer'])
+            
+            # Show follow-up suggestions
+            if response_data.get('follow_up_suggestions'):
+                with st.expander("💡 Follow-up suggestions", expanded=True):
+                    for suggestion in response_data['follow_up_suggestions']:
+                        if st.button(f"💬 {suggestion}", key=f"immediate_followup_{hash(suggestion)}"):
+                            st.session_state.question_input = suggestion
+                            st.rerun()
+            
+            # Show sources and context
+            if response_data.get('sources'):
+                with st.expander("📚 Sources & Context", expanded=False):
+                    for source in response_data['sources']:
+                        st.write(f"• {source}")
+            
+            # Show enhanced context if available
+            if st.session_state.enhanced_mode_enabled and response_data.get('context_used'):
+                with st.expander("🧠 AI Context Used", expanded=False):
+                    for context in response_data['context_used']:
+                        st.write(f"• {context.replace('_', ' ').title()}")
+    
+    def _format_structured_response_for_storage(self, structured_format: Dict[str, Any]) -> str:
+        """Format structured response for storage compatibility."""
+        if not structured_format:
+            return ""
+        
+        parts = []
+        if structured_format.get('direct_evidence'):
+            parts.append(f"**Direct Evidence:**\n{structured_format['direct_evidence']}")
+        if structured_format.get('plain_explanation'):
+            parts.append(f"**Plain-English Explanation:**\n{structured_format['plain_explanation']}")
+        if structured_format.get('implication_analysis'):
+            parts.append(f"**Implication/Analysis:**\n{structured_format['implication_analysis']}")
+        
+        return "\n\n".join(parts)
     
     def _process_question_with_excel(self, question: str, document: Document, session_id: str) -> None:
         """Process question and generate Excel report."""
@@ -1122,12 +1496,12 @@ class EnhancedQAInterface:
                 st.rerun()
         
         with col2:
-            # Show conversation context info
-            if session_id in st.session_state.conversation_context:
-                context = st.session_state.conversation_context[session_id]
-                st.info(f"💬 Topic: {context.current_topic or 'General'}")
+            # Show enhanced mode status and context info
+            if st.session_state.enhanced_mode_enabled:
+                context_count = len(st.session_state.conversation_context_persistence.get(session_id, []))
+                st.info(f"🚀 Enhanced: {context_count} turns")
             else:
-                st.info("💬 New conversation")
+                st.info("📝 Standard mode")
         
         with col3:
             # Show session stats
