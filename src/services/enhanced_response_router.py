@@ -3,11 +3,14 @@ Enhanced Response Router for Contract Assistant
 
 Main orchestration component that routes questions to appropriate handlers
 and coordinates response generation with context awareness.
+
+Now includes guaranteed structured response patterns with never-fail logic.
 """
 
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 import logging
+import traceback
 from src.models.enhanced import (
     EnhancedResponse, QuestionIntent, ResponseStrategy, 
     ConversationContext, MTAContext, MTAInsight,
@@ -19,6 +22,7 @@ from src.services.fallback_response_generator import FallbackResponseGenerator
 from src.services.mta_specialist import MTASpecialistModule
 from src.services.enhanced_context_manager import EnhancedContextManager
 from src.services.contract_analyst_engine import ContractAnalystEngine
+from src.services.structured_response_system import StructuredResponseSystem
 from src.storage.document_storage import DocumentStorage
 import os
 # Error handling will be done with try-catch blocks
@@ -28,13 +32,21 @@ logger = logging.getLogger(__name__)
 
 
 class EnhancedResponseRouter:
-    """Main orchestration component for enhanced contract assistant responses"""
+    """
+    Main orchestration component for enhanced contract assistant responses.
+    
+    Now includes guaranteed structured response patterns with never-fail logic
+    that ensures EVERY input receives a meaningful, structured response.
+    """
     
     def __init__(self, storage: DocumentStorage = None, api_key: str = None):
         self.question_classifier = QuestionClassifier()
         self.fallback_generator = FallbackResponseGenerator()
         self.mta_specialist = MTASpecialistModule()
         self.context_manager = EnhancedContextManager()
+        
+        # Initialize structured response system for guaranteed responses
+        self.structured_response_system = StructuredResponseSystem()
         
         # Initialize contract engine with proper dependencies
         if storage is None:
@@ -52,35 +64,86 @@ class EnhancedResponseRouter:
         session_id: str,
         document: Optional[Document] = None
     ) -> EnhancedResponse:
-        """Route question to appropriate handler and generate enhanced response"""
+        """
+        Route question to appropriate handler and generate enhanced response.
+        
+        This method now uses the structured response system to guarantee
+        meaningful output regardless of input quality or system errors.
+        """
         
         try:
-            # Get conversation context
-            conversation_context = self.context_manager.get_conversation_context(session_id)
+            # NEVER-FAIL GUARANTEE: Use structured response system as primary handler
+            document_content = None
+            if document:
+                document_content = getattr(document, 'content', None) or getattr(document, 'original_text', '')
             
-            # Classify question intent
-            intent = self.classify_question_intent(question, document, conversation_context)
+            # Get conversation context for additional context
+            conversation_context = None
+            try:
+                conversation_context = self.context_manager.get_conversation_context(session_id)
+            except Exception as context_error:
+                logger.warning(f"Could not get conversation context: {context_error}")
             
-            # Determine response strategy
-            strategy = self.determine_response_strategy(intent, document, conversation_context)
+            # Prepare context dictionary
+            context_dict = {
+                'session_id': session_id,
+                'document_id': document_id,
+                'conversation_context': conversation_context
+            }
             
-            # Generate response based on strategy
-            response = self._generate_response(question, intent, strategy, document, conversation_context)
-            
-            # Update conversation context
-            self.context_manager.update_conversation_context(
-                session_id, question, response, intent, strategy
+            # Generate guaranteed structured response
+            response = self.structured_response_system.process_input_with_guaranteed_response(
+                user_input=question,
+                document_content=document_content,
+                context=context_dict
             )
             
-            # Add contextual enhancements
-            response = self._enhance_response_with_context(response, conversation_context, document)
+            # Try to enhance with existing systems (but don't fail if they error)
+            try:
+                response = self._enhance_with_existing_systems(
+                    response, question, document, session_id, conversation_context
+                )
+            except Exception as enhancement_error:
+                logger.warning(f"Enhancement failed but continuing with structured response: {enhancement_error}")
             
-            logger.info(f"Successfully routed question with intent: {intent.primary_intent}")
+            # Try to update conversation context (but don't fail if it errors)
+            try:
+                if conversation_context:
+                    # Create a basic intent for context tracking
+                    intent = QuestionIntent(
+                        primary_intent=IntentType.DOCUMENT_RELATED,
+                        confidence=response.confidence,
+                        secondary_intents=[],
+                        document_relevance_score=0.7,
+                        casualness_level=0.3,
+                        requires_mta_expertise=False,
+                        requires_fallback=False
+                    )
+                    
+                    strategy = ResponseStrategy(
+                        handler_type=HandlerType.EXISTING_CONTRACT,
+                        use_structured_format=True,
+                        include_suggestions=True,
+                        tone_preference=response.tone,
+                        fallback_options=[],
+                        context_requirements=[]
+                    )
+                    
+                    self.context_manager.update_conversation_context(
+                        session_id, question, response, intent, strategy
+                    )
+            except Exception as context_update_error:
+                logger.warning(f"Context update failed: {context_update_error}")
+            
+            logger.info(f"Successfully generated structured response for question: {question[:50]}...")
             return response
             
         except Exception as e:
-            logger.error(f"Error in route_question: {str(e)}")
-            return self._create_error_fallback_response(question, str(e))
+            logger.error(f"Critical error in route_question: {str(e)}")
+            logger.error(f"Traceback: {traceback.format_exc()}")
+            
+            # Ultimate fallback - this should never fail
+            return self.structured_response_system._create_ultimate_fallback_response(question, str(e))
     
     def classify_question_intent(
         self, 
@@ -639,6 +702,82 @@ class EnhancedResponseRouter:
             logger.error(f"Error creating document analysis fallback: {e}")
             return "I'm having trouble analyzing this document right now. Could you try asking about a specific section or rephrase your question?"
     
+    def _enhance_with_existing_systems(
+        self,
+        response: EnhancedResponse,
+        question: str,
+        document: Optional[Document],
+        session_id: str,
+        conversation_context: Optional[ConversationContext]
+    ) -> EnhancedResponse:
+        """
+        Enhance structured response with existing systems (MTA, context, etc.).
+        This method can fail without breaking the overall response.
+        """
+        try:
+            # Try to add MTA expertise if relevant
+            if document and self._is_mta_document(document):
+                try:
+                    mta_context = self.mta_specialist.analyze_mta_context(document)
+                    mta_insight = self.mta_specialist.provide_mta_expertise(question, mta_context)
+                    
+                    if mta_insight.concept_explanations or mta_insight.research_implications:
+                        response.content += "\n\n**MTA-Specific Context:**"
+                        
+                        for concept, explanation in mta_insight.concept_explanations.items():
+                            response.content += f"\n- **{concept.title()}**: {explanation}"
+                        
+                        if mta_insight.research_implications:
+                            response.content += "\n\n**Research Implications:**"
+                            for implication in mta_insight.research_implications:
+                                response.content += f"\n- {implication}"
+                        
+                        response.sources.append("mta_specialist")
+                        response.context_used.append("mta_expertise")
+                        
+                        # Add MTA suggestions
+                        response.suggestions.extend(mta_insight.suggested_questions[:2])
+                        
+                except Exception as mta_error:
+                    logger.warning(f"MTA enhancement failed: {mta_error}")
+            
+            # Try to add conversation context enhancements
+            if conversation_context:
+                try:
+                    patterns = self.context_manager.detect_conversation_patterns(session_id)
+                    
+                    if "repetitive_questioning" in patterns:
+                        response.content += "\n\n*I notice you're exploring similar topics. Would you like me to approach this differently?*"
+                    
+                    if "increasing_complexity" in patterns and conversation_context.user_expertise_level == "beginner":
+                        response.content += "\n\n*Let me know if you'd like me to explain any of these concepts in simpler terms.*"
+                    
+                    response.context_used.append("conversation_patterns")
+                    
+                except Exception as context_error:
+                    logger.warning(f"Context enhancement failed: {context_error}")
+            
+            # Try to enhance suggestions with existing systems
+            try:
+                if document:
+                    additional_suggestions = self.fallback_generator.suggest_relevant_questions(document)
+                    # Add unique suggestions
+                    for suggestion in additional_suggestions[:2]:
+                        if suggestion not in response.suggestions:
+                            response.suggestions.append(suggestion)
+                    
+                    # Limit total suggestions
+                    response.suggestions = response.suggestions[:5]
+                    
+            except Exception as suggestion_error:
+                logger.warning(f"Suggestion enhancement failed: {suggestion_error}")
+            
+            return response
+            
+        except Exception as e:
+            logger.warning(f"Overall enhancement failed: {e}")
+            return response
+    
     def _create_error_recovery_response(self, question: str, intent: QuestionIntent, error_msg: str) -> EnhancedResponse:
         """Create an error recovery response that's helpful to users"""
         
@@ -686,4 +825,28 @@ class EnhancedResponseRouter:
             structured_format=None,
             context_used=["error_recovery"],
             timestamp=datetime.now()
-        )
+        )    
+
+    def _enhance_with_existing_systems(
+        self, response: EnhancedResponse, question: str, document: Optional[Document], 
+        session_id: str, conversation_context: Optional[ConversationContext]
+    ) -> EnhancedResponse:
+        """Enhance structured response with existing system capabilities."""
+        try:
+            # Add MTA expertise if applicable
+            if document and self._is_mta_document(document):
+                response = self._enhance_with_mta_expertise(response, question, document, conversation_context)
+            
+            # Add contextual enhancements
+            if conversation_context:
+                response = self._enhance_response_with_context(response, conversation_context, document)
+            
+            # Ensure suggestions are populated
+            if not response.suggestions and document:
+                response.suggestions = self._generate_contextual_suggestions(question, document, conversation_context)
+            
+            return response
+            
+        except Exception as e:
+            logger.warning(f"Error enhancing with existing systems: {e}")
+            return response

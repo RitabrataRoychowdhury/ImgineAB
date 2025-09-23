@@ -1332,12 +1332,12 @@ class EnhancedQAInterface:
             logger.error(f"Error saving enhanced interaction: {e}")
     
     def _display_immediate_response(self, question: str, response_data: Dict[str, Any]) -> None:
-        """Display immediate response in chat format."""
+        """Display immediate response in chat format with enhanced structured patterns."""
         with st.chat_message("user"):
             st.write(question)
         
         with st.chat_message("assistant"):
-            # Show enhanced mode indicator
+            # Show enhanced mode indicator with tone adaptation
             if st.session_state.enhanced_mode_enabled and response_data.get('enhanced_metadata'):
                 metadata = response_data['enhanced_metadata']
                 tone_value = metadata.get('tone', 'professional')
@@ -1348,6 +1348,189 @@ class EnhancedQAInterface:
                     tone_str = str(tone_value)
                 
                 tone_icon = {"professional": "🏛️", "conversational": "💬", "playful": "😊"}.get(tone_str, "💬")
+                
+                # Show structured pattern indicator
+                structured_format = response_data.get('structured_format', {})
+                pattern_type = structured_format.get('pattern', 'standard')
+                
+                pattern_indicators = {
+                    'document': '📋 Document Analysis',
+                    'general_legal': 'ℹ️ General Legal',
+                    'data_table': '📊 Data Export',
+                    'ambiguous': '🤔 Multi-Interpretation',
+                    'ambiguous_enhanced': '🤔 Enhanced Analysis'
+                }
+                
+                pattern_text = pattern_indicators.get(pattern_type, '💬 Standard')
+                st.caption(f"{tone_icon} {tone_str.title()} Tone | {pattern_text}")
+            
+            # Display the main response content
+            self._display_structured_response_content(response_data)
+            
+            # Show follow-up suggestions if available
+            if response_data.get('follow_up_suggestions'):
+                self._display_follow_up_suggestions(response_data['follow_up_suggestions'])
+            
+            # Show sources and metadata
+            self._display_response_metadata(response_data)
+    
+    def _display_structured_response_content(self, response_data: Dict[str, Any]) -> None:
+        """Display structured response content with appropriate formatting."""
+        structured_format = response_data.get('structured_format', {})
+        pattern_type = structured_format.get('pattern', 'standard')
+        
+        # Display based on pattern type
+        if pattern_type == 'document':
+            self._display_document_pattern_response(structured_format)
+        elif pattern_type == 'general_legal':
+            self._display_general_legal_pattern_response(structured_format)
+        elif pattern_type == 'data_table':
+            self._display_data_table_pattern_response(structured_format)
+        elif pattern_type in ['ambiguous', 'ambiguous_enhanced']:
+            self._display_ambiguous_pattern_response(structured_format)
+        else:
+            # Standard response display
+            st.write(response_data.get('answer', 'No response available'))
+    
+    def _display_document_pattern_response(self, structured_format: Dict[str, Any]) -> None:
+        """Display document pattern response with Evidence, Plain English, Implications."""
+        evidence = structured_format.get('evidence', '')
+        plain_english = structured_format.get('plain_english', '')
+        implications = structured_format.get('implications', '')
+        
+        if evidence:
+            st.markdown("### 📋 Evidence")
+            st.write(evidence)
+        
+        if plain_english:
+            st.markdown("### 🔍 Plain English")
+            st.write(plain_english)
+        
+        if implications:
+            st.markdown("### ⚖️ Implications")
+            st.write(implications)
+    
+    def _display_general_legal_pattern_response(self, structured_format: Dict[str, Any]) -> None:
+        """Display general legal pattern response with Status, General Rule, Application."""
+        status = structured_format.get('status', '')
+        general_rule = structured_format.get('general_rule', '')
+        application = structured_format.get('application', '')
+        
+        if status:
+            st.markdown("### ℹ️ Status")
+            st.write(status)
+        
+        if general_rule:
+            st.markdown("### 📚 General Rule")
+            st.write(general_rule)
+        
+        if application:
+            st.markdown("### 🎯 Application")
+            st.write(application)
+    
+    def _display_data_table_pattern_response(self, structured_format: Dict[str, Any]) -> None:
+        """Display data table pattern response with exports."""
+        table = structured_format.get('table')
+        exports = structured_format.get('exports', [])
+        
+        if table and hasattr(table, 'headers') and hasattr(table, 'rows'):
+            # Display table
+            st.markdown("### 📊 Data Summary")
+            
+            # Create DataFrame for better display
+            import pandas as pd
+            try:
+                df = pd.DataFrame(table.rows, columns=table.headers)
+                st.dataframe(df, use_container_width=True)
+            except Exception:
+                # Fallback to simple table display
+                st.write("**Headers:**", ", ".join(table.headers))
+                for i, row in enumerate(table.rows[:10]):  # Limit display
+                    st.write(f"**Row {i+1}:**", ", ".join(str(cell) for cell in row))
+        
+        # Display export links
+        if exports:
+            st.markdown("### 📥 Export Options")
+            for export_file in exports:
+                if hasattr(export_file, 'download_url') and hasattr(export_file, 'format_type'):
+                    st.markdown(f"- [{export_file.format_type.upper()} Download]({export_file.download_url})")
+    
+    def _display_ambiguous_pattern_response(self, structured_format: Dict[str, Any]) -> None:
+        """Display ambiguous pattern response with interpretations and alternatives."""
+        primary = structured_format.get('primary_interpretation', {})
+        alternatives = structured_format.get('alternatives', [])
+        synthesis = structured_format.get('synthesis', {})
+        
+        # Display primary interpretation
+        if primary:
+            intent = primary.get('intent', 'general_inquiry').replace('_', ' ').title()
+            confidence = primary.get('confidence', 0.5)
+            reasoning = primary.get('reasoning', '')
+            
+            st.markdown(f"### 🤔 Primary Interpretation: {intent}")
+            st.write(f"**Confidence:** {confidence:.0%}")
+            if reasoning:
+                st.write(reasoning)
+        
+        # Display alternatives
+        if alternatives:
+            st.markdown("### 🔄 Alternative Interpretations")
+            for i, alt in enumerate(alternatives, 1):
+                with st.expander(f"Option {chr(64+i)}: {alt.get('focus', 'Alternative')}", expanded=False):
+                    st.write(f"**Description:** {alt.get('description', '')}")
+                    st.write(f"**Analysis Path:** {alt.get('analysis_path', '')}")
+                    st.write(f"**Confidence:** {alt.get('confidence', 0.5):.0%}")
+        
+        # Display synthesis
+        if synthesis:
+            st.markdown("### 🔗 Synthesis")
+            recommendation = synthesis.get('recommendation', '')
+            if recommendation:
+                st.write(recommendation)
+            
+            connections = synthesis.get('connections', [])
+            if connections:
+                st.write("**Connections:**")
+                for connection in connections:
+                    st.write(f"- {connection}")
+    
+    def _display_follow_up_suggestions(self, suggestions: List[str]) -> None:
+        """Display follow-up suggestions with enhanced formatting."""
+        if suggestions:
+            st.markdown("### 💡 Follow-up Suggestions")
+            for suggestion in suggestions[:4]:  # Limit to 4 suggestions
+                if st.button(f"💬 {suggestion}", key=f"suggestion_{hash(suggestion)}"):
+                    # Set the suggestion as the next question
+                    st.session_state.question_input = suggestion
+                    st.rerun()
+    
+    def _display_response_metadata(self, response_data: Dict[str, Any]) -> None:
+        """Display response metadata including sources and confidence."""
+        # Show confidence if available
+        confidence = response_data.get('confidence')
+        if confidence is not None:
+            if confidence > 0.8:
+                st.success(f"High confidence: {confidence:.0%}")
+            elif confidence > 0.6:
+                st.info(f"Good confidence: {confidence:.0%}")
+            elif confidence > 0.4:
+                st.warning(f"Moderate confidence: {confidence:.0%}")
+            else:
+                st.error(f"Low confidence: {confidence:.0%}")
+        
+        # Show sources in expandable section
+        sources = response_data.get('sources', [])
+        if sources:
+            with st.expander("📚 Sources", expanded=False):
+                for source in sources:
+                    st.write(f"• {source}")
+        
+        # Show context used
+        context_used = response_data.get('context_used', [])
+        if context_used:
+            with st.expander("🔍 Analysis Context", expanded=False):
+                for context in context_used:
+                    st.write(f"• {context.replace('_', ' ').title()}")
                 
                 response_type_value = metadata.get('response_type', 'response')
                 if hasattr(response_type_value, 'value'):

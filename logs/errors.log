@@ -1,0 +1,16 @@
+2025-09-23 15:35:55,049 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 15:35:55,049 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
+2025-09-23 15:39:43,260 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 15:39:43,260 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
+2025-09-23 15:40:22,098 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 15:40:22,098 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
+2025-09-23 15:41:52,856 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 15:41:52,856 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
+2025-09-23 15:44:56,158 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 15:44:56,159 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
+2025-09-23 15:45:48,588 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 15:45:48,589 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
+2025-09-23 15:46:47,948 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 15:46:47,948 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
+2025-09-23 15:47:43,948 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 15:47:43,949 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
