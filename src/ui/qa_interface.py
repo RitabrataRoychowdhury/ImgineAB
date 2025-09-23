@@ -11,6 +11,9 @@ from src.services.contract_analyst_engine import ContractAnalystEngine, create_c
 from src.services.enhanced_summary_analyzer import EnhancedSummaryAnalyzer
 from src.services.conversational_ai_engine import ConversationalAIEngine
 from src.services.excel_report_generator import ExcelReportGenerator
+from src.services.excel_export_engine import ExcelExportEngine
+from src.services.request_analyzer import RequestAnalyzer
+from src.services.data_formatter import DataFormatter
 from src.services.template_engine import TemplateEngine
 from src.services.enhanced_response_router import EnhancedResponseRouter
 from src.storage.document_storage import DocumentStorage
@@ -36,6 +39,9 @@ class EnhancedQAInterface:
         self.enhanced_analyzer = None
         self.conversational_engine = None
         self.excel_generator = None
+        self.excel_export_engine = None
+        self.request_analyzer = None
+        self.data_formatter = None
         self.template_engine = None
         self.enhanced_router = None
         
@@ -133,6 +139,12 @@ class EnhancedQAInterface:
             self.conversational_engine = ConversationalAIEngine(self.qa_engine, self.contract_engine)
         if not self.excel_generator:
             self.excel_generator = ExcelReportGenerator(self.storage)
+        if not self.excel_export_engine:
+            self.excel_export_engine = ExcelExportEngine(self.storage)
+        if not self.request_analyzer:
+            self.request_analyzer = RequestAnalyzer()
+        if not self.data_formatter:
+            self.data_formatter = DataFormatter()
         if not self.template_engine:
             self.template_engine = TemplateEngine(self.storage)
         if not self.enhanced_router:
@@ -160,8 +172,8 @@ class EnhancedQAInterface:
         # Q&A session section with enhanced routing
         self._render_enhanced_qa_session(selected_doc)
         
-        # Excel report generation section
-        self._render_excel_generation_section(selected_doc)
+        # Enhanced Excel export section
+        self._render_enhanced_export_section(selected_doc)
     
     def _render_document_selector(self, preselected_doc_id: Optional[str] = None) -> Optional[Document]:
         """Render document selection interface with enhanced visual indicators."""
@@ -442,13 +454,76 @@ class EnhancedQAInterface:
     
     def _process_question(self, question: str, document: Document, session_id: str) -> None:
         """Process a user question and display the answer."""
+        # Analyze request for export needs
+        request_analysis = self.request_analyzer.analyze_request(
+            question, 
+            context={
+                'document_id': document.id,
+                'analysis_mode': st.session_state.analysis_mode,
+                'has_structured_data': True
+            }
+        )
+        
         # Check if enhanced mode is enabled and try it first
         if st.session_state.enhanced_mode_enabled:
-            self._process_conversational_question(question, document, session_id)
+            self._process_enhanced_question(question, document, session_id, request_analysis)
         else:
-            self._process_standard_question(question, document, session_id)
+            self._process_standard_question(question, document, session_id, request_analysis)
     
-    def _process_standard_question(self, question: str, document: Document, session_id: str) -> None:
+    def _process_enhanced_question(self, question: str, document: Document, session_id: str, request_analysis) -> None:
+        """Process question with enhanced export capabilities."""
+        analysis_mode = st.session_state.analysis_mode
+        spinner_text = "🏛️ Analyzing legal document..." if analysis_mode == 'contract' else "🤔 Thinking about your question..."
+        
+        with st.spinner(spinner_text):
+            try:
+                # Initialize engines if needed
+                self._ensure_engines_initialized()
+                
+                # Use enhanced router for better responses
+                if self.enhanced_router:
+                    result = self.enhanced_router.route_and_respond(question, document.id, session_id)
+                else:
+                    # Fallback to standard processing
+                    engine = self.contract_engine if analysis_mode == 'contract' else self.qa_engine
+                    result = engine.answer_question(question, document.id, session_id)
+                
+                # Display the answer
+                if result.get('error'):
+                    st.error(f"❌ {result['answer']}")
+                else:
+                    success_text = "✅ Analysis complete!" 
+                    st.success(success_text)
+                    
+                    # Show answer in chat format
+                    with st.chat_message("user"):
+                        st.write(question)
+                    
+                    with st.chat_message("assistant"):
+                        # Display structured response for contract analysis
+                        if result.get('structured_response'):
+                            self._render_structured_response(result['structured_response'])
+                        else:
+                            st.write(result['answer'])
+                        
+                        # Show sources
+                        if result.get('sources'):
+                            with st.expander("📚 Sources", expanded=True):
+                                for source in result['sources']:
+                                    st.write(f"• {source}")
+                        
+                        # Show export options if request analysis suggests it
+                        if request_analysis.should_generate_export:
+                            self._render_export_options(result, request_analysis, document)
+                
+                # Refresh to show updated conversation
+                st.rerun()
+                
+            except Exception as e:
+                logger.error(f"Error in enhanced question processing: {e}")
+                st.error(f"❌ Error processing question: {str(e)}")
+    
+    def _process_standard_question(self, question: str, document: Document, session_id: str, request_analysis=None) -> None:
         """Process question using standard contract analysis."""
         analysis_mode = st.session_state.analysis_mode
         spinner_text = "🏛️ Analyzing legal document..." if analysis_mode == 'contract' else "🤔 Thinking about your question..."
@@ -514,6 +589,10 @@ class EnhancedQAInterface:
                                 st.warning(f"Confidence: {confidence:.1%}")
                             else:
                                 st.error(f"Low confidence: {confidence:.1%}")
+                        
+                        # Show export options if request analysis suggests it
+                        if request_analysis and request_analysis.should_generate_export:
+                            self._render_export_options(result, request_analysis, document)
                 
                 # Refresh to show updated conversation
                 st.rerun()
@@ -1791,6 +1870,338 @@ class EnhancedQAInterface:
     def _show_template_management(self) -> None:
         """Show template management interface."""
         st.info("Template management feature coming soon!")
+    
+    def _render_export_options(self, result: Dict[str, Any], request_analysis, document: Document) -> None:
+        """Render export options based on request analysis."""
+        st.markdown("---")
+        st.subheader("📊 Export Options")
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            if st.button("📊 Export as Excel", key=f"excel_export_{hash(str(result))}"):
+                self._generate_response_export(result, 'excel', request_analysis, document)
+        
+        with col2:
+            if st.button("📄 Export as CSV", key=f"csv_export_{hash(str(result))}"):
+                self._generate_response_export(result, 'csv', request_analysis, document)
+        
+        with col3:
+            if st.button("📋 Export as Text", key=f"text_export_{hash(str(result))}"):
+                self._generate_response_export(result, 'text', request_analysis, document)
+        
+        # Show export confidence
+        confidence_text = f"Export confidence: {request_analysis.confidence:.1%}"
+        if request_analysis.confidence >= 0.8:
+            st.success(f"🎯 {confidence_text} - Strong export recommendation")
+        elif request_analysis.confidence >= 0.6:
+            st.info(f"📊 {confidence_text} - Tabular data detected")
+        else:
+            st.warning(f"⚠️ {confidence_text} - Potential export need")
+    
+    def _generate_response_export(self, result: Dict[str, Any], format_type: str, 
+                                request_analysis, document: Document) -> None:
+        """Generate export for the response data."""
+        try:
+            with st.spinner(f"Generating {format_type.upper()} export..."):
+                # Format the response data
+                formatted_data = self.data_formatter.format_response_for_export(
+                    result,
+                    response_type='qa_response',
+                    context={
+                        'document_id': document.id,
+                        'document_title': document.title,
+                        'analysis_mode': st.session_state.analysis_mode,
+                        'request_analysis': request_analysis
+                    }
+                )
+                
+                # Generate export using the export engine
+                export_result = self.excel_export_engine.export_tabular_data(
+                    formatted_data.structured_data,
+                    user_request=f"Export response data as {format_type}",
+                    format_preferences=[format_type, 'csv', 'text']
+                )
+                
+                if export_result.success:
+                    st.success(f"✅ {format_type.upper()} export generated successfully!")
+                    
+                    # Provide download link
+                    st.markdown(f"**📥 [Download {export_result.filename}]({export_result.download_url})**")
+                    
+                    # Show file info
+                    with st.expander("📋 Export Details", expanded=False):
+                        st.write(f"**File:** {export_result.filename}")
+                        st.write(f"**Format:** {export_result.format_type.upper()}")
+                        st.write(f"**Expires:** {export_result.expiration_time.strftime('%Y-%m-%d %H:%M')}")
+                        if export_result.fallback_used:
+                            st.warning("⚠️ Fallback format used due to complexity")
+                        
+                        # Show metadata
+                        if export_result.metadata:
+                            st.json(export_result.metadata)
+                    
+                    # Add to session state for tracking
+                    if 'generated_exports' not in st.session_state:
+                        st.session_state.generated_exports = []
+                    
+                    st.session_state.generated_exports.append({
+                        'filename': export_result.filename,
+                        'format': export_result.format_type,
+                        'generated_at': datetime.now(),
+                        'download_url': export_result.download_url
+                    })
+                    
+                else:
+                    st.error(f"❌ Failed to generate {format_type.upper()} export: {export_result.error_message}")
+                    
+        except Exception as e:
+            logger.error(f"Error generating export: {e}")
+            st.error(f"❌ Error generating export: {str(e)}")
+    
+    def _render_enhanced_export_section(self, document: Document) -> None:
+        """Render enhanced export generation section with never-fail guarantee."""
+        st.markdown("---")
+        st.subheader("📊 Enhanced Export Generation")
+        
+        # Export type selection
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            export_type = st.selectbox(
+                "Select Export Type:",
+                options=[
+                    "Document Summary",
+                    "Risk Analysis",
+                    "Q&A History", 
+                    "Portfolio Analysis",
+                    "Custom Data Export"
+                ],
+                key="export_type_selector"
+            )
+        
+        with col2:
+            format_preference = st.selectbox(
+                "Preferred Format:",
+                options=["Excel (Recommended)", "CSV", "JSON", "Text"],
+                key="format_preference_selector"
+            )
+        
+        # Generate export button
+        if st.button("🚀 Generate Export", type="primary", key="generate_export_btn"):
+            self._generate_enhanced_export(document, export_type, format_preference)
+        
+        # Show recent exports
+        if 'generated_exports' in st.session_state and st.session_state.generated_exports:
+            st.subheader("📥 Recent Exports")
+            
+            for export_info in reversed(st.session_state.generated_exports[-5:]):  # Show last 5
+                with st.expander(f"📄 {export_info['filename']}", expanded=False):
+                    col1, col2, col3 = st.columns(3)
+                    
+                    with col1:
+                        st.write(f"**Format:** {export_info['format'].upper()}")
+                    
+                    with col2:
+                        st.write(f"**Generated:** {export_info['generated_at'].strftime('%H:%M:%S')}")
+                    
+                    with col3:
+                        st.markdown(f"**[Download]({export_info['download_url']})**")
+    
+    def _generate_enhanced_export(self, document: Document, export_type: str, format_preference: str) -> None:
+        """Generate enhanced export with never-fail guarantee."""
+        try:
+            with st.spinner(f"Generating {export_type} export..."):
+                format_map = {
+                    "Excel (Recommended)": "excel",
+                    "CSV": "csv", 
+                    "JSON": "json",
+                    "Text": "text"
+                }
+                
+                preferred_format = format_map.get(format_preference, "excel")
+                
+                if export_type == "Document Summary":
+                    # Get document summary data
+                    summary_data = self._get_document_summary_data(document)
+                    export_result = self.excel_export_engine.generate_document_summary_export(summary_data)
+                    
+                elif export_type == "Risk Analysis":
+                    # Get risk analysis data
+                    risk_data = self._get_risk_analysis_data(document)
+                    document_info = {'title': document.title, 'id': document.id}
+                    export_result = self.excel_export_engine.generate_risk_analysis_report(risk_data, document_info)
+                    
+                elif export_type == "Q&A History":
+                    # Get Q&A history
+                    qa_history = self._get_qa_history_data(document.id)
+                    export_result = self.excel_export_engine.export_tabular_data(
+                        {'qa_history': qa_history},
+                        user_request="Export Q&A history",
+                        format_preferences=[preferred_format, 'csv', 'text']
+                    )
+                    
+                elif export_type == "Portfolio Analysis":
+                    # Get portfolio data
+                    portfolio_data = self._get_portfolio_data()
+                    export_result = self.excel_export_engine.generate_portfolio_analysis_report(portfolio_data)
+                    
+                else:  # Custom Data Export
+                    # Get custom data based on current context
+                    custom_data = self._get_custom_export_data(document)
+                    export_result = self.excel_export_engine.export_tabular_data(
+                        custom_data,
+                        user_request=f"Custom export for {document.title}",
+                        format_preferences=[preferred_format, 'csv', 'text']
+                    )
+                
+                # Display results
+                if export_result.success:
+                    st.success(f"✅ {export_type} export generated successfully!")
+                    
+                    # Provide download link
+                    st.markdown(f"**📥 [Download {export_result.filename}]({export_result.download_url})**")
+                    
+                    # Show export details
+                    with st.expander("📋 Export Details", expanded=True):
+                        col1, col2 = st.columns(2)
+                        
+                        with col1:
+                            st.write(f"**File:** {export_result.filename}")
+                            st.write(f"**Format:** {export_result.format_type.upper()}")
+                            st.write(f"**Size:** {self._get_file_size(export_result.file_path)}")
+                        
+                        with col2:
+                            st.write(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                            st.write(f"**Expires:** {export_result.expiration_time.strftime('%Y-%m-%d %H:%M')}")
+                            
+                            if export_result.fallback_used:
+                                st.warning("⚠️ Fallback format used")
+                            else:
+                                st.success("✅ Full format generated")
+                    
+                    # Add to session tracking
+                    if 'generated_exports' not in st.session_state:
+                        st.session_state.generated_exports = []
+                    
+                    st.session_state.generated_exports.append({
+                        'filename': export_result.filename,
+                        'format': export_result.format_type,
+                        'generated_at': datetime.now(),
+                        'download_url': export_result.download_url,
+                        'export_type': export_type
+                    })
+                    
+                else:
+                    st.error(f"❌ Export generation failed: {export_result.error_message}")
+                    
+        except Exception as e:
+            logger.error(f"Error in enhanced export generation: {e}")
+            st.error(f"❌ Error generating export: {str(e)}")
+    
+    def _get_document_summary_data(self, document: Document) -> Dict[str, Any]:
+        """Get document summary data for export."""
+        return {
+            'title': document.title,
+            'document_type': document.document_type or 'Unknown',
+            'upload_date': document.upload_timestamp.isoformat(),
+            'summary': document.summary or 'No summary available',
+            'file_size': document.file_size,
+            'processing_status': document.processing_status,
+            'key_terms': getattr(document, 'key_terms', {}),
+            'important_dates': getattr(document, 'important_dates', [])
+        }
+    
+    def _get_risk_analysis_data(self, document: Document) -> Dict[str, Any]:
+        """Get risk analysis data for export."""
+        # This would integrate with the risk analysis engine
+        return {
+            'risks': [
+                {
+                    'risk_id': 'R001',
+                    'description': 'Sample risk for demonstration',
+                    'severity': 'Medium',
+                    'category': 'Legal',
+                    'probability': 0.6,
+                    'impact_description': 'Potential compliance issues',
+                    'affected_parties': ['Organization'],
+                    'mitigation_strategies': ['Regular compliance review'],
+                    'materialization_timeframe': '6-12 months'
+                }
+            ]
+        }
+    
+    def _get_qa_history_data(self, document_id: str) -> List[Dict[str, Any]]:
+        """Get Q&A history data for export."""
+        qa_history = []
+        
+        # Get sessions for this document
+        analysis_mode = st.session_state.analysis_mode
+        session_key = f"session_{document_id}_{analysis_mode}"
+        
+        if session_key in st.session_state.qa_sessions:
+            session_id = st.session_state.qa_sessions[session_key]
+            engine = self.contract_engine if analysis_mode == 'contract' else self.qa_engine
+            
+            if engine:
+                session = engine.get_qa_session(session_id)
+                if session and session.questions:
+                    for i, interaction in enumerate(session.questions, 1):
+                        qa_history.append({
+                            'question_number': i,
+                            'question': interaction['question'],
+                            'answer': interaction['answer'],
+                            'timestamp': interaction.get('timestamp', ''),
+                            'analysis_mode': interaction.get('analysis_mode', analysis_mode),
+                            'confidence': interaction.get('confidence', 'N/A'),
+                            'sources': ', '.join(interaction.get('sources', []))
+                        })
+        
+        return qa_history
+    
+    def _get_portfolio_data(self) -> List[Dict[str, Any]]:
+        """Get portfolio data for export."""
+        documents = self.storage.list_documents(status_filter='completed')
+        portfolio_data = []
+        
+        for doc in documents:
+            portfolio_data.append({
+                'title': doc.title,
+                'document_type': doc.document_type or 'Unknown',
+                'upload_date': doc.upload_timestamp.isoformat(),
+                'status': doc.processing_status,
+                'file_size': doc.file_size,
+                'is_legal_document': getattr(doc, 'is_legal_document', False),
+                'risks': [],  # Would be populated by risk analysis
+                'key_terms': getattr(doc, 'key_terms', [])
+            })
+        
+        return portfolio_data
+    
+    def _get_custom_export_data(self, document: Document) -> Dict[str, Any]:
+        """Get custom export data based on current context."""
+        return {
+            'document_info': self._get_document_summary_data(document),
+            'qa_history': self._get_qa_history_data(document.id),
+            'analysis_context': {
+                'analysis_mode': st.session_state.analysis_mode,
+                'enhanced_mode_enabled': st.session_state.enhanced_mode_enabled,
+                'legal_document_info': st.session_state.legal_document_info.get(document.id, {})
+            }
+        }
+    
+    def _get_file_size(self, file_path: str) -> str:
+        """Get human-readable file size."""
+        try:
+            import os
+            size = os.path.getsize(file_path)
+            for unit in ['B', 'KB', 'MB', 'GB']:
+                if size < 1024.0:
+                    return f"{size:.1f} {unit}"
+                size /= 1024.0
+            return f"{size:.1f} TB"
+        except:
+            return "Unknown"
 
 
 def render_qa_page():

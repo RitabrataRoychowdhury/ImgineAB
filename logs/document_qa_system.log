@@ -1,269 +1,181 @@
-2025-09-23 15:34:41,779 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
-2025-09-23 15:34:41,779 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
-2025-09-23 15:34:41,779 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
-2025-09-23 15:34:41,779 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
-2025-09-23 15:34:41,779 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
-2025-09-23 15:34:41,779 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
-2025-09-23 15:34:41,779 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
-2025-09-23 15:34:41,780 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
-2025-09-23 15:34:41,780 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
-2025-09-23 15:34:41,780 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
-2025-09-23 15:34:41,780 - src.app - INFO - _initialize_database:111 - Database size: 53248 bytes
-2025-09-23 15:34:41,799 - src.app - INFO - _verify_system_health:185 - System Health Check:
-2025-09-23 15:34:41,799 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 0 documents
-2025-09-23 15:34:41,799 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
-2025-09-23 15:34:41,799 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
-2025-09-23 15:34:41,799 - src.app - INFO - initialize:90 - ✅ Application initialization complete
-2025-09-23 15:34:41,800 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
-2025-09-23 15:34:41,800 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
-2025-09-23 15:34:41,800 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
-2025-09-23 15:34:44,824 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
-2025-09-23 15:34:44,824 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
-2025-09-23 15:34:44,824 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
-2025-09-23 15:34:44,824 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
-2025-09-23 15:34:44,824 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
-2025-09-23 15:34:44,825 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
-2025-09-23 15:34:44,825 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
-2025-09-23 15:34:44,825 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
-2025-09-23 15:34:44,825 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
-2025-09-23 15:34:44,825 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
-2025-09-23 15:34:44,825 - src.app - INFO - _initialize_database:111 - Database size: 53248 bytes
-2025-09-23 15:34:44,835 - src.app - INFO - _verify_system_health:185 - System Health Check:
-2025-09-23 15:34:44,836 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 0 documents
-2025-09-23 15:34:44,836 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
-2025-09-23 15:34:44,836 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
-2025-09-23 15:34:44,836 - src.app - INFO - initialize:90 - ✅ Application initialization complete
-2025-09-23 15:35:11,995 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
-2025-09-23 15:35:11,995 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
-2025-09-23 15:35:11,995 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
-2025-09-23 15:35:11,995 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
-2025-09-23 15:35:11,996 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
-2025-09-23 15:35:11,996 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
-2025-09-23 15:35:11,996 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
-2025-09-23 15:35:11,996 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
-2025-09-23 15:35:11,996 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
-2025-09-23 15:35:11,996 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
-2025-09-23 15:35:11,996 - src.app - INFO - _initialize_database:111 - Database size: 53248 bytes
-2025-09-23 15:35:12,009 - src.app - INFO - _verify_system_health:185 - System Health Check:
-2025-09-23 15:35:12,009 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 0 documents
-2025-09-23 15:35:12,009 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
-2025-09-23 15:35:12,009 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
-2025-09-23 15:35:12,009 - src.app - INFO - initialize:90 - ✅ Application initialization complete
-2025-09-23 15:35:12,009 - __main__ - INFO - main:43 - Application initialized successfully in Streamlit
-2025-09-23 15:35:25,630 - src.services.simple_processor - INFO - process_document_immediately:41 - Starting immediate processing for Example Material Transfer Agreement.docx
-2025-09-23 15:35:25,631 - src.services.simple_processor - INFO - process_document_immediately:59 - Processing document with comprehensive AI analysis...
-2025-09-23 15:35:36,297 - src.services.simple_processor - INFO - process_document_immediately:66 - Comprehensive AI processing successful. Result keys: ['document_type', 'extracted_info', 'analysis', 'summary']
-2025-09-23 15:35:36,297 - src.services.simple_processor - INFO - process_document_immediately:84 - Document fully processed successfully
-2025-09-23 15:35:36,304 - src.storage.document_storage - INFO - create_document:48 - Created document record: 0b78949c-8565-40d3-954e-7a4206e1e222
-2025-09-23 15:35:36,304 - src.services.simple_processor - INFO - process_document_immediately:91 - Document 0b78949c-8565-40d3-954e-7a4206e1e222 stored with status: completed
-2025-09-23 15:35:48,207 - src.storage.migrations - INFO - run_migrations:55 - Applying migration: 001_add_legal_document_fields - Add legal document fields to documents table
-2025-09-23 15:35:48,212 - src.storage.migrations - INFO - _apply_migration:96 - Migration 001_add_legal_document_fields applied successfully
-2025-09-23 15:35:48,212 - src.storage.migrations - INFO - run_migrations:55 - Applying migration: 002_enhance_qa_sessions - Add analysis mode to Q&A sessions
-2025-09-23 15:35:48,215 - src.storage.migrations - INFO - _apply_migration:96 - Migration 002_enhance_qa_sessions applied successfully
-2025-09-23 15:35:48,215 - src.storage.migrations - INFO - run_migrations:55 - Applying migration: 003_enhance_qa_interactions - Add structured response fields to Q&A interactions
-2025-09-23 15:35:48,218 - src.storage.migrations - INFO - _apply_migration:96 - Migration 003_enhance_qa_interactions applied successfully
-2025-09-23 15:35:48,218 - src.storage.migrations - INFO - run_migrations:55 - Applying migration: 004_create_enhanced_tables - Create new tables for enhanced analysis
-2025-09-23 15:35:48,224 - src.storage.migrations - INFO - _apply_migration:96 - Migration 004_create_enhanced_tables applied successfully
-2025-09-23 15:35:48,225 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:35:48,226 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:35:48,231 - src.storage.document_storage - INFO - create_qa_session:346 - Created Q&A session: 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:35:53,564 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:35:53,566 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:35:53,613 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:35:53,614 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:35:55,026 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:35:55,026 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:35:55,043 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DOCUMENT
-2025-09-23 15:35:55,043 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
-2025-09-23 15:35:55,043 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: Can you explain this in simple terms?...
-2025-09-23 15:35:55,045 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:35:55,049 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
-2025-09-23 15:35:55,049 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
-2025-09-23 15:36:00,157 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:36:09,805 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:36:09,807 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:36:16,387 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:36:16,387 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:36:53,252 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:36:53,253 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:36:57,467 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:36:57,519 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:36:57,519 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:37:14,917 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:37:14,918 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:37:19,789 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:37:19,835 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:37:19,835 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:37:34,422 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:37:34,423 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:37:37,910 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:37:37,986 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:37:37,986 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:38:05,837 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:38:05,838 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:38:08,463 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:38:08,512 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:38:08,513 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:38:21,499 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:38:21,500 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:38:24,298 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:38:24,356 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:38:24,356 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:38:37,294 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:38:37,294 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:38:41,398 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:38:41,456 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:38:41,457 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:38:58,593 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:38:58,593 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:39:02,598 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:39:02,639 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:39:02,640 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:39:12,916 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:39:12,916 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:39:12,973 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:39:12,973 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:39:22,189 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:39:22,190 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:39:22,249 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:39:22,249 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:39:31,629 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:39:31,629 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:39:43,235 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:39:43,235 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:39:43,256 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DOCUMENT
-2025-09-23 15:39:43,256 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
-2025-09-23 15:39:43,257 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: If this contract was a meme, what would it be?...
-2025-09-23 15:39:43,258 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:39:43,260 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
-2025-09-23 15:39:43,260 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
-2025-09-23 15:40:06,299 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:40:06,299 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:40:10,381 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:40:10,382 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:40:22,072 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:40:22,072 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:40:22,094 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DOCUMENT
-2025-09-23 15:40:22,095 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
-2025-09-23 15:40:22,095 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: So, like, what’s the point of this deal anyway?...
-2025-09-23 15:40:22,096 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:40:22,098 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
-2025-09-23 15:40:22,098 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
-2025-09-23 15:41:14,099 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:41:14,100 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:41:18,591 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:41:18,643 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:41:18,643 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:41:38,392 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:41:38,393 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:41:52,822 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:41:52,822 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:41:52,847 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DATA_TABLE
-2025-09-23 15:41:52,847 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
-2025-09-23 15:41:52,847 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: generate me an excel sheet from the data about the...
-2025-09-23 15:41:52,848 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:41:52,856 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
-2025-09-23 15:41:52,856 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
-2025-09-23 15:41:56,887 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:42:19,783 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:42:19,784 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:42:19,791 - src.services.enhanced_summary_analyzer - INFO - analyze_document_comprehensive:52 - Starting comprehensive analysis for document 0b78949c-8565-40d3-954e-7a4206e1e222 using template Policy Analysis
-2025-09-23 15:42:55,454 - src.services.enhanced_summary_analyzer - INFO - identify_risks:209 - Identified 7 risks in document 0b78949c-8565-40d3-954e-7a4206e1e222
-2025-09-23 15:43:04,983 - src.services.enhanced_summary_analyzer - WARNING - extract_commitments:281 - Could not parse deadline: Upon Request
-2025-09-23 15:43:04,984 - src.services.enhanced_summary_analyzer - WARNING - extract_commitments:281 - Could not parse deadline: 30 days prior to publication/presentation
-2025-09-23 15:43:04,984 - src.services.enhanced_summary_analyzer - WARNING - extract_commitments:281 - Could not parse deadline: At time of publication
-2025-09-23 15:43:04,984 - src.services.enhanced_summary_analyzer - INFO - extract_commitments:295 - Extracted 11 commitments from document 0b78949c-8565-40d3-954e-7a4206e1e222
-2025-09-23 15:43:09,484 - src.services.enhanced_summary_analyzer - WARNING - find_deliverable_dates:373 - Could not parse date: N/A
-2025-09-23 15:43:09,486 - src.services.enhanced_summary_analyzer - WARNING - find_deliverable_dates:373 - Could not parse date: N/A
-2025-09-23 15:43:09,486 - src.services.enhanced_summary_analyzer - WARNING - find_deliverable_dates:373 - Could not parse date: N/A
-2025-09-23 15:43:09,486 - src.services.enhanced_summary_analyzer - WARNING - find_deliverable_dates:373 - Could not parse date: N/A
-2025-09-23 15:43:09,486 - src.services.enhanced_summary_analyzer - INFO - find_deliverable_dates:378 - Found 1 deliverable dates in document 0b78949c-8565-40d3-954e-7a4206e1e222
-2025-09-23 15:43:09,486 - src.services.enhanced_summary_analyzer - INFO - analyze_document_comprehensive:131 - Completed comprehensive analysis ecddb44e-9fc9-4328-a9a0-b3047a5f0131 with confidence 0.95
-2025-09-23 15:43:09,492 - src.storage.enhanced_storage - INFO - save_comprehensive_analysis:63 - Saved comprehensive analysis: ecddb44e-9fc9-4328-a9a0-b3047a5f0131
-2025-09-23 15:43:09,562 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:43:09,562 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:43:43,194 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:43:43,195 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:44:23,080 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:44:23,081 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:44:25,295 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:44:25,348 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:44:25,348 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:44:33,246 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:44:33,247 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:44:56,117 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:44:56,118 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:44:56,155 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DATA_TABLE
-2025-09-23 15:44:56,155 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
-2025-09-23 15:44:56,155 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: please do generate the required excel sheet for th...
-2025-09-23 15:44:56,156 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:44:56,158 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
-2025-09-23 15:44:56,159 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
-2025-09-23 15:45:00,701 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 0312f07d-5b7b-4a9b-864b-deac5a295fe8
-2025-09-23 15:45:08,616 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:45:08,619 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:45:24,067 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:45:24,068 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:45:24,145 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:45:24,145 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:45:38,414 - src.app - WARNING - initialize:62 - Application already initialized
-2025-09-23 15:45:38,414 - __main__ - INFO - main:43 - Application initialized successfully in Streamlit
-2025-09-23 15:45:41,089 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:45:41,090 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:45:41,103 - src.storage.document_storage - INFO - create_qa_session:346 - Created Q&A session: fdda89c5-80a6-454a-b81b-e1450673565b
-2025-09-23 15:45:47,167 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:45:47,168 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:45:47,217 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:45:47,218 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:45:48,565 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:45:48,566 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:45:48,584 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DOCUMENT
-2025-09-23 15:45:48,584 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
-2025-09-23 15:45:48,584 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: What actions do I need to take?...
-2025-09-23 15:45:48,586 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session fdda89c5-80a6-454a-b81b-e1450673565b
-2025-09-23 15:45:48,588 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
-2025-09-23 15:45:48,589 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
-2025-09-23 15:45:50,773 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session fdda89c5-80a6-454a-b81b-e1450673565b
-2025-09-23 15:45:58,051 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:45:58,051 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:45:58,095 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:45:58,095 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:45:58,100 - src.storage.document_storage - INFO - create_qa_session:346 - Created Q&A session: 5345a9c2-c1d4-4f7f-bc3f-3b68d866e507
-2025-09-23 15:46:13,028 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:46:13,029 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:46:47,928 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:46:47,929 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:46:47,943 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DATA_TABLE
-2025-09-23 15:46:47,944 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
-2025-09-23 15:46:47,944 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: generate me a excel sheet format data for the risk...
-2025-09-23 15:46:47,945 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 5345a9c2-c1d4-4f7f-bc3f-3b68d866e507
-2025-09-23 15:46:47,948 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
-2025-09-23 15:46:47,948 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
-2025-09-23 15:46:53,345 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 5345a9c2-c1d4-4f7f-bc3f-3b68d866e507
-2025-09-23 15:47:03,657 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:47:03,658 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:47:09,944 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:47:09,945 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:47:10,007 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:47:10,007 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:47:10,022 - src.storage.document_storage - INFO - create_qa_session:346 - Created Q&A session: 36de2866-1458-4a34-adb4-6bf4dfbfc783
-2025-09-23 15:47:35,046 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:47:35,047 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:47:43,908 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:47:43,909 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:47:43,944 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DATA_TABLE
-2025-09-23 15:47:43,944 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
-2025-09-23 15:47:43,945 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: generate me the excel sheet downloadable table for...
-2025-09-23 15:47:43,946 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 36de2866-1458-4a34-adb4-6bf4dfbfc783
-2025-09-23 15:47:43,948 - src.ui.qa_interface - ERROR - _process_conversational_question:1274 - Error processing conversational question: name 'metadata' is not defined
-2025-09-23 15:47:43,949 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1110 - Enhanced mode error: name 'metadata' is not defined
-2025-09-23 15:47:46,591 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 36de2866-1458-4a34-adb4-6bf4dfbfc783
-2025-09-23 15:48:21,371 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:48:21,372 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:48:24,961 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 36de2866-1458-4a34-adb4-6bf4dfbfc783
-2025-09-23 15:48:25,007 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
-2025-09-23 15:48:25,007 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
-2025-09-23 15:48:52,191 - src.app - INFO - signal_handler:44 - Received signal 2, shutting down gracefully...
-2025-09-23 15:48:52,194 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
-2025-09-23 15:48:52,194 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
-2025-09-23 15:48:52,194 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-23 17:14:10,012 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-23 17:14:10,013 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-23 17:14:10,013 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-23 17:14:10,013 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-23 17:14:10,013 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-23 17:14:10,013 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-23 17:14:10,013 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-23 17:14:10,013 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-23 17:14:10,013 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-23 17:14:10,013 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-23 17:14:10,013 - src.app - INFO - _initialize_database:111 - Database size: 53248 bytes
+2025-09-23 17:14:10,033 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-23 17:14:10,033 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 0 documents
+2025-09-23 17:14:10,033 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-23 17:14:10,033 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-23 17:14:10,033 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-23 17:14:10,034 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-23 17:14:10,034 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-23 17:14:10,034 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
+2025-09-23 17:14:13,990 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-23 17:14:13,991 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-23 17:14:13,991 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-23 17:14:13,991 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-23 17:14:13,991 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-23 17:14:13,991 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-23 17:14:13,991 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-23 17:14:13,991 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-23 17:14:13,991 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-23 17:14:13,991 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-23 17:14:13,991 - src.app - INFO - _initialize_database:111 - Database size: 53248 bytes
+2025-09-23 17:14:14,002 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-23 17:14:14,002 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 0 documents
+2025-09-23 17:14:14,002 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-23 17:14:14,002 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-23 17:14:14,002 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-23 17:14:38,292 - src.app - INFO - initialize:65 - Initializing Document Q&A Application...
+2025-09-23 17:14:38,292 - src.utils.logging_config - INFO - log_system_info:79 - ==================================================
+2025-09-23 17:14:38,292 - src.utils.logging_config - INFO - log_system_info:80 - Document Q&A System Starting
+2025-09-23 17:14:38,293 - src.utils.logging_config - INFO - log_system_info:81 - Debug Mode: False
+2025-09-23 17:14:38,293 - src.utils.logging_config - INFO - log_system_info:82 - Max File Size: 10MB
+2025-09-23 17:14:38,293 - src.utils.logging_config - INFO - log_system_info:83 - Allowed File Types: ['pdf', 'txt', 'docx']
+2025-09-23 17:14:38,293 - src.utils.logging_config - INFO - log_system_info:84 - Database Path: data/database/documents.db
+2025-09-23 17:14:38,293 - src.utils.logging_config - INFO - log_system_info:85 - Processing Timeout: 300s
+2025-09-23 17:14:38,293 - src.utils.logging_config - INFO - log_system_info:86 - ==================================================
+2025-09-23 17:14:38,293 - src.app - INFO - _initialize_database:110 - Database initialized: data/database/documents.db
+2025-09-23 17:14:38,293 - src.app - INFO - _initialize_database:111 - Database size: 53248 bytes
+2025-09-23 17:14:38,306 - src.app - INFO - _verify_system_health:185 - System Health Check:
+2025-09-23 17:14:38,306 - src.app - INFO - _verify_system_health:188 -   ✅ Database: Connected - 0 documents
+2025-09-23 17:14:38,306 - src.app - INFO - _verify_system_health:188 -   ✅ File Handler: Validation working
+2025-09-23 17:14:38,306 - src.app - INFO - _verify_system_health:188 -   ✅ Workflow Manager: Queue size: 0
+2025-09-23 17:14:38,306 - src.app - INFO - initialize:90 - ✅ Application initialization complete
+2025-09-23 17:14:38,306 - __main__ - INFO - main:43 - Application initialized successfully in Streamlit
+2025-09-23 17:14:41,299 - src.storage.migrations - INFO - run_migrations:55 - Applying migration: 001_add_legal_document_fields - Add legal document fields to documents table
+2025-09-23 17:14:41,305 - src.storage.migrations - INFO - _apply_migration:96 - Migration 001_add_legal_document_fields applied successfully
+2025-09-23 17:14:41,305 - src.storage.migrations - INFO - run_migrations:55 - Applying migration: 002_enhance_qa_sessions - Add analysis mode to Q&A sessions
+2025-09-23 17:14:41,309 - src.storage.migrations - INFO - _apply_migration:96 - Migration 002_enhance_qa_sessions applied successfully
+2025-09-23 17:14:41,309 - src.storage.migrations - INFO - run_migrations:55 - Applying migration: 003_enhance_qa_interactions - Add structured response fields to Q&A interactions
+2025-09-23 17:14:41,312 - src.storage.migrations - INFO - _apply_migration:96 - Migration 003_enhance_qa_interactions applied successfully
+2025-09-23 17:14:41,312 - src.storage.migrations - INFO - run_migrations:55 - Applying migration: 004_create_enhanced_tables - Create new tables for enhanced analysis
+2025-09-23 17:14:41,320 - src.storage.migrations - INFO - _apply_migration:96 - Migration 004_create_enhanced_tables applied successfully
+2025-09-23 17:14:41,320 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:14:41,322 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:14:51,149 - src.services.simple_processor - INFO - process_document_immediately:41 - Starting immediate processing for Example Material Transfer Agreement.docx
+2025-09-23 17:14:51,149 - src.services.simple_processor - INFO - process_document_immediately:59 - Processing document with comprehensive AI analysis...
+2025-09-23 17:15:02,678 - src.services.simple_processor - INFO - process_document_immediately:66 - Comprehensive AI processing successful. Result keys: ['document_type', 'extracted_info', 'analysis', 'summary']
+2025-09-23 17:15:02,679 - src.services.simple_processor - INFO - process_document_immediately:84 - Document fully processed successfully
+2025-09-23 17:15:02,686 - src.storage.document_storage - INFO - create_document:48 - Created document record: 26695bcb-ecb4-4344-9bf4-6033d73759d2
+2025-09-23 17:15:02,686 - src.services.simple_processor - INFO - process_document_immediately:91 - Document 26695bcb-ecb4-4344-9bf4-6033d73759d2 stored with status: completed
+2025-09-23 17:15:06,595 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:15:06,598 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:15:06,610 - src.storage.document_storage - INFO - create_qa_session:346 - Created Q&A session: cd9b2ee0-099f-4630-9c76-22b470362a84
+2025-09-23 17:15:08,814 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:15:08,815 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:15:08,819 - src.services.enhanced_summary_analyzer - INFO - analyze_document_comprehensive:52 - Starting comprehensive analysis for document 26695bcb-ecb4-4344-9bf4-6033d73759d2 using template Policy Analysis
+2025-09-23 17:15:41,315 - src.services.enhanced_summary_analyzer - INFO - identify_risks:209 - Identified 8 risks in document 26695bcb-ecb4-4344-9bf4-6033d73759d2
+2025-09-23 17:15:51,555 - src.services.enhanced_summary_analyzer - WARNING - extract_commitments:281 - Could not parse deadline: Upon request
+2025-09-23 17:15:51,555 - src.services.enhanced_summary_analyzer - WARNING - extract_commitments:281 - Could not parse deadline: 30 days prior to publication/presentation
+2025-09-23 17:15:51,555 - src.services.enhanced_summary_analyzer - WARNING - extract_commitments:281 - Could not parse deadline: At time of publication
+2025-09-23 17:15:51,556 - src.services.enhanced_summary_analyzer - INFO - extract_commitments:295 - Extracted 12 commitments from document 26695bcb-ecb4-4344-9bf4-6033d73759d2
+2025-09-23 17:15:57,391 - src.services.enhanced_summary_analyzer - WARNING - find_deliverable_dates:373 - Could not parse date: N/A
+2025-09-23 17:15:57,391 - src.services.enhanced_summary_analyzer - WARNING - find_deliverable_dates:373 - Could not parse date: N/A
+2025-09-23 17:15:57,392 - src.services.enhanced_summary_analyzer - WARNING - find_deliverable_dates:373 - Could not parse date: N/A
+2025-09-23 17:15:57,392 - src.services.enhanced_summary_analyzer - WARNING - find_deliverable_dates:373 - Could not parse date: N/A
+2025-09-23 17:15:57,392 - src.services.enhanced_summary_analyzer - INFO - find_deliverable_dates:378 - Found 1 deliverable dates in document 26695bcb-ecb4-4344-9bf4-6033d73759d2
+2025-09-23 17:15:57,392 - src.services.enhanced_summary_analyzer - INFO - analyze_document_comprehensive:131 - Completed comprehensive analysis ee7287fa-e13c-4a8c-b2ab-9bf77df1fe24 with confidence 0.95
+2025-09-23 17:15:57,396 - src.storage.enhanced_storage - INFO - save_comprehensive_analysis:63 - Saved comprehensive analysis: ee7287fa-e13c-4a8c-b2ab-9bf77df1fe24
+2025-09-23 17:15:57,434 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:15:57,434 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:16:04,340 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:16:04,341 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:16:22,995 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:16:22,998 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:16:23,063 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:16:23,064 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:16:24,258 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:16:24,261 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:16:24,292 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DOCUMENT
+2025-09-23 17:16:24,293 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
+2025-09-23 17:16:24,293 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: What are the key obligations?...
+2025-09-23 17:16:24,294 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session cd9b2ee0-099f-4630-9c76-22b470362a84
+2025-09-23 17:16:24,296 - src.ui.qa_interface - ERROR - _process_conversational_question:1353 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 17:16:24,297 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1189 - Enhanced mode error: name 'metadata' is not defined
+2025-09-23 17:16:28,935 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session cd9b2ee0-099f-4630-9c76-22b470362a84
+2025-09-23 17:17:13,562 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:17:13,563 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:17:20,693 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session cd9b2ee0-099f-4630-9c76-22b470362a84
+2025-09-23 17:17:20,746 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:17:20,746 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:17:31,836 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:17:31,837 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:17:38,713 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:17:38,715 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:17:43,979 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:17:43,981 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:17:45,179 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:17:45,181 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:17:45,217 - src.services.excel_export_engine - INFO - export_data:96 - Starting export for request: risk_analysis
+2025-09-23 17:17:45,217 - src.services.excel_export_engine - INFO - _try_primary_export:173 - Attempting primary Excel export with full formatting
+2025-09-23 17:17:45,217 - src.services.excel_export_engine - WARNING - export_data:102 - Primary export failed: 'str' object has no attribute 'get'
+2025-09-23 17:17:45,217 - src.services.excel_export_engine - INFO - _try_basic_excel_export:204 - Attempting basic Excel export
+2025-09-23 17:18:28,016 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:18:28,017 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:18:29,043 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:18:29,046 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:18:41,699 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:18:41,700 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:18:41,747 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:18:41,748 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:18:41,753 - src.storage.document_storage - INFO - create_qa_session:346 - Created Q&A session: 14e44323-6d75-4b88-bb18-dc6fd1d4a8ca
+2025-09-23 17:18:54,613 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:18:54,615 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:18:54,631 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DATA_TABLE
+2025-09-23 17:18:54,631 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
+2025-09-23 17:18:54,631 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: generate me a detailed excel sheet on the differen...
+2025-09-23 17:18:54,632 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 14e44323-6d75-4b88-bb18-dc6fd1d4a8ca
+2025-09-23 17:18:54,636 - src.ui.qa_interface - ERROR - _process_conversational_question:1353 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 17:18:54,636 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1189 - Enhanced mode error: name 'metadata' is not defined
+2025-09-23 17:19:02,234 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 14e44323-6d75-4b88-bb18-dc6fd1d4a8ca
+2025-09-23 17:19:12,785 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:19:12,787 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:19:12,839 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:19:12,840 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:19:12,845 - src.storage.document_storage - INFO - create_qa_session:346 - Created Q&A session: 3e09a774-4995-443c-bf88-39a8b513f3ee
+2025-09-23 17:19:17,273 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:19:17,275 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:19:23,478 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:19:23,481 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:19:23,495 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DATA_TABLE
+2025-09-23 17:19:23,495 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
+2025-09-23 17:19:23,495 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: generate me a detailed excel sheet on the differen...
+2025-09-23 17:19:23,497 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 3e09a774-4995-443c-bf88-39a8b513f3ee
+2025-09-23 17:19:23,500 - src.ui.qa_interface - ERROR - _process_conversational_question:1353 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 17:19:23,500 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1189 - Enhanced mode error: name 'metadata' is not defined
+2025-09-23 17:19:29,569 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 3e09a774-4995-443c-bf88-39a8b513f3ee
+2025-09-23 17:20:30,767 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:20:30,768 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:20:35,530 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:20:35,534 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:20:38,389 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 3e09a774-4995-443c-bf88-39a8b513f3ee
+2025-09-23 17:20:38,436 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:20:38,437 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:20:50,162 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:20:50,164 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:20:53,340 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 3e09a774-4995-443c-bf88-39a8b513f3ee
+2025-09-23 17:20:53,386 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:20:53,386 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:21:00,382 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:21:00,384 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:21:26,542 - src.storage.migrations - INFO - run_migrations:58 - All migrations completed successfully
+2025-09-23 17:21:26,545 - src.services.question_classifier - INFO - __init__:131 - QuestionClassifier initialized
+2025-09-23 17:21:26,566 - src.services.structured_response_system - INFO - process_input_with_guaranteed_response:126 - Successfully generated structured response with pattern: ResponsePatternType.DOCUMENT
+2025-09-23 17:21:26,566 - src.services.enhanced_response_router - WARNING - _enhance_with_existing_systems:851 - Error enhancing with existing systems: 'Document' object has no attribute 'content'
+2025-09-23 17:21:26,566 - src.services.enhanced_response_router - INFO - route_question:138 - Successfully generated structured response for question: who is the signatory of this document ? and what a...
+2025-09-23 17:21:26,568 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 3e09a774-4995-443c-bf88-39a8b513f3ee
+2025-09-23 17:21:26,570 - src.ui.qa_interface - ERROR - _process_conversational_question:1353 - Error processing conversational question: name 'metadata' is not defined
+2025-09-23 17:21:26,570 - src.ui.qa_interface - ERROR - _handle_enhanced_mode_error:1189 - Enhanced mode error: name 'metadata' is not defined
+2025-09-23 17:21:28,566 - src.storage.document_storage - INFO - add_qa_interaction:411 - Added Q&A interaction to session 3e09a774-4995-443c-bf88-39a8b513f3ee
+2025-09-23 17:21:57,198 - src.app - INFO - signal_handler:44 - Received signal 2, shutting down gracefully...
+2025-09-23 17:21:57,199 - src.app - INFO - shutdown:205 - Shutting down Document Q&A Application...
+2025-09-23 17:21:57,199 - src.workflow.workflow_manager - INFO - stop:44 - Workflow manager stopped
+2025-09-23 17:21:57,200 - src.app - INFO - shutdown:219 - ✅ Application shutdown complete
